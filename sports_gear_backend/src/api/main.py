@@ -40,11 +40,15 @@ def health_check():
     """PUBLIC_INTERFACE: Simple app health check."""
     return {"message": "Healthy"}
 
-# Dependency for getting a DB session
+# PUBLIC_INTERFACE
 def get_db():
-    """Yields a fresh SQLAlchemy DB session for each request."""
-    SessionLocal = models.get_session_local()
-    db = SessionLocal()
+    """
+    Yields a fresh SQLAlchemy DB session for each request.
+    Fix: Ensures SessionLocal is only created once at app startup to avoid issues with multiple engines.
+    """
+    if not hasattr(get_db, "SessionLocal"):
+        get_db.SessionLocal = models.get_session_local()
+    db = get_db.SessionLocal()
     try:
         yield db
     finally:
