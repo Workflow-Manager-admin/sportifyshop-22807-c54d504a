@@ -731,9 +731,20 @@ class CategoryCreate(BaseModel):
     description: Optional[str] = ""
 
 @app.post("/admin/category", response_model=ProductCategoryOut, tags=["catalog"], include_in_schema=False)
-def admin_add_category(cat: CategoryCreate, db: Session = Depends(get_db)):
-    category = models.ProductCategory(name=cat.name, description=cat.description)
-    db.add(category)
+def admin_add_or_update_category(cat: CategoryCreate, db: Session = Depends(get_db)):
+    """
+    PUBLIC_INTERFACE: Create or update a product category (Shirts, Trousers, Shoes, Watches, etc).
+    If the category with the given name exists, update its description.
+    If it does not exist, create it.
+    """
+    category = db.query(models.ProductCategory).filter_by(name=cat.name).first()
+    if category:
+        if cat.description is not None and cat.description.strip() != category.description:
+            category.description = cat.description
+        db.add(category)
+    else:
+        category = models.ProductCategory(name=cat.name, description=cat.description)
+        db.add(category)
     db.commit()
     db.refresh(category)
     return category
