@@ -1,6 +1,6 @@
 import os
 from typing import List, Optional
-from fastapi import FastAPI, Depends, HTTPException, status, Body, Path, Query
+from fastapi import FastAPI, Depends, HTTPException, status, Body, Path, Query, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from fastapi.responses import JSONResponse
@@ -18,7 +18,7 @@ from . import models
 SECRET_KEY = os.getenv("SECRET_KEY", "super-secret-change-this-in-production")
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 60 * 24 * 7  # 1 week
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/login")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 # ====== STRIPE CONFIG =======
@@ -53,7 +53,11 @@ app.add_middleware(
 @app.on_event("startup")
 def startup_event():
     """Initialize the database (create tables if not exist)."""
-    models.init_db()
+    try:
+        models.init_db()
+    except Exception as exc:
+        import traceback
+        print("Startup DB initialization failed:", exc, traceback.format_exc())
 
 # PUBLIC_INTERFACE
 def get_db():
@@ -75,7 +79,7 @@ def get_password_hash(password):
 
 def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
     to_encode = data.copy()
-    expire = datetime.utcnow() + (expires_delta or timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES))
+    expire = datetime.utcnow() + (expires_delta if expires_delta else timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES))
     to_encode.update({"exp": expire})
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
@@ -106,7 +110,6 @@ def get_current_active_user(current_user: models.User = Depends(get_current_user
 
 # ============ Pydantic Schemas (DTOs) ============ #
 
-# --------- AUTH & USER ------- #
 class UserRegisterRequest(BaseModel):
     email: EmailStr
     password: str = Field(..., min_length=6)
@@ -130,7 +133,6 @@ class UserProfileUpdate(BaseModel):
     full_name: Optional[str] = None
     password: Optional[str] = Field(None, min_length=6)
 
-# --------- PRODUCT & CATALOG ------- #
 class ProductCategoryOut(BaseModel):
     id: int
     name: str
@@ -151,7 +153,6 @@ class ProductOut(BaseModel):
     class Config:
         orm_mode = True
 
-# ------- CART -------- #
 class CartItemCreate(BaseModel):
     product_id: int
     quantity: int = Field(..., gt=0)
@@ -175,7 +176,6 @@ class CartOut(BaseModel):
     class Config:
         orm_mode = True
 
-# ------- ORDER -------- #
 class OrderItemOut(BaseModel):
     id: int
     product: ProductOut
@@ -196,7 +196,6 @@ class OrderOut(BaseModel):
     class Config:
         orm_mode = True
 
-# ------------ STRIPE/Checkout -------------- #
 class StripeSessionResponse(BaseModel):
     checkout_url: str
 
@@ -247,6 +246,11 @@ def register_user(data: UserRegisterRequest, db: Session = Depends(get_db)):
 # PUBLIC_INTERFACE
 @app.post("/auth/login", response_model=UserLoginResponse, tags=["auth"], summary="User login")
 def login_user(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
+    """
+    OAuth2-compatible login endpoint.
+    Accepts: username (email), password as form fields.
+    Returns: access_token and token_type='bearer'.
+    """
     user = db.query(models.User).filter(models.User.email == form_data.username).first()
     if not user or not verify_password(form_data.password, user.hashed_password):
         raise HTTPException(status_code=400, detail="Invalid email or password")
@@ -444,8 +448,8 @@ def create_stripe_session(
             payment_method_types=["card"],
             line_items=line_items,
             mode="payment",
-            success_url="https://example.com/success",  # To be replaced with frontend URL
-            cancel_url="https://example.com/cancel",
+            success_url=os.getenv("CHECKOUT_SUCCESS_URL", "https://example.com/success"),
+            cancel_url=os.getenv("CHECKOUT_CANCEL_URL", "https://example.com/cancel"),
             metadata={"cart_id": cart.id, "user_id": current_user.id}
         )
     except Exception as e:
@@ -512,6 +516,7 @@ class ProductCreate(BaseModel):
     price: float
     available_sizes: Optional[str] = "M,L,XL"
     category_id: int = Field(..., gt=0)
+
 class CategoryCreate(BaseModel):
     name: str
     description: Optional[str] = ""
@@ -532,11 +537,18 @@ def admin_add_product(product: ProductCreate, db: Session = Depends(get_db)):
     db.refresh(prod)
     return prod
 
-# ---- Error handling middleware for Stripe/Test keys etc
+# ---- Improved Error handling middleware
 @app.exception_handler(Exception)
-def generic_exception_handler(request, exc):
+async def generic_exception_handler(request: Request, exc: Exception):
     import traceback
+    from fastapi.responses import JSONResponse
+    display_trace = bool(os.getenv("DEBUG", False)) or os.getenv("ENV", "development") == "development"
+    trace = traceback.format_exc() if display_trace else "trace hidden"
+    status_code = getattr(exc, "status_code", 500)
+    detail = getattr(exc, "detail", str(exc))
+    # Log the error server-side too
+    print(f"Generic exception handler: {detail}\n{trace}")
     return JSONResponse(
-        status_code=getattr(exc, "status_code", 500),
-        content={"detail": str(exc), "trace": traceback.format_exc() if app.debug else "trace hidden"},
+        status_code=status_code,
+        content={"detail": detail, "trace": trace},
     )
