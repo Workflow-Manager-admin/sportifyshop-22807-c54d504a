@@ -472,6 +472,25 @@ def update_my_profile(update: UserProfileUpdate, db: Session = Depends(get_db), 
 # PUBLIC_INTERFACE
 @app.get("/categories", response_model=List[ProductCategoryOut], tags=["catalog"], summary="List all product categories")
 def list_categories(db: Session = Depends(get_db)):
+    """
+    PUBLIC_INTERFACE: List all product categories. Ensures that the four main categories
+    (Shirts, Trousers, Shoes, Watches) always exist on every request.
+
+    Returns:
+        List of all ProductCategoryOut.
+    """
+    main_categories = [
+        {"name": "Shirts", "description": "Sport and exercise shirts"},
+        {"name": "Trousers", "description": "Sport pants, leggings, shorts"},
+        {"name": "Shoes", "description": "Running, training, sports shoes"},
+        {"name": "Watches", "description": "Sport watches, fitness trackers"},
+    ]
+    for cat in main_categories:
+        existing = db.query(models.ProductCategory).filter_by(name=cat["name"]).first()
+        if not existing:
+            new_cat = models.ProductCategory(name=cat["name"], description=cat["description"])
+            db.add(new_cat)
+    db.commit()
     return db.query(models.ProductCategory).all()
 
 # PUBLIC_INTERFACE
