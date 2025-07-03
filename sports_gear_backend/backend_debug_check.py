@@ -1,131 +1,45 @@
-import os
-import subprocess
-import socket
+"""
+Script: backend_debug_check.py
+Purpose: 
+- Directly check if 'admin@example.com' exists in the SQLite users table.
+- Print the bcrypt hash and full user row.
+- Test and print if password 'admin123' verifies with the stored hash using backend hashing logic.
+Usage:
+  python backend_debug_check.py
 
-import requests
+This script should be run from the sports_gear_backend folder or adjust path accordingly.
+"""
 
-def check_products_images(api_url="http://127.0.0.1:8000/products"):
-    """Fetch products, print breakdown of image_url validity."""
-    try:
-        resp = requests.get(api_url, timeout=10)
-        if resp.status_code != 200:
-            print(f"Failed to get products: status {resp.status_code}")
-            return
-        data = resp.json()
-        for prod in data:
-            url = prod.get("image_url")
-            pid = prod.get("id")
-            name = prod.get("name")
-            if not url:
-                print(f"[MISSING] Product {pid} ('{name}') has no image_url")
-            elif not (url.startswith("http://") or url.startswith("https://")):
-                print(f"[INVALID] Product {pid} ('{name}') image_url is not public: {url}")
-            else:
-                # Check if URL is reachable (HEAD request)
-                try:
-                    test = requests.head(url, timeout=5)
-                    if test.status_code >= 400:
-                        print(f"[BROKEN-LINK] Product {pid}: {url} status={test.status_code}")
-                    else:
-                        print(f"[OK] Product {pid}: '{name}' -> {url}")
-                except Exception as e:
-                    print(f"[UNREACHABLE] Product {pid}: {url} error={e}")
-    except Exception as e:
-        print(f"Error in products image_url check: {e}")
+from sqlalchemy.orm import sessionmaker
+from src.api.models import User, get_engine
+from src.api.main import verify_password, get_password_hash
 
-if __name__ == '__main__':
-    print("\n==== Product Image URL Data/Access Check ====")
-    check_products_images("http://127.0.0.1:8000/products")
+def debug_admin_user():
+    engine = get_engine(echo=False)
+    SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+    db = SessionLocal()
+    admin_email = "admin@example.com"
 
-def is_port_open(port, host='127.0.0.1'):
-    """Check if the backend port is open and listening."""
-    try:
-        with socket.create_connection((host, port), timeout=3):
-            return True
-    except OSError:
-        return False
+    user = db.query(User).filter_by(email=admin_email).first()
+    if user:
+        print("User found: admin@example.com")
+        print("Full DB row:", dict(
+            id=user.id, email=user.email, hashed_password=user.hashed_password, full_name=user.full_name, is_active=user.is_active
+        ))
+        # Check password
+        plain_pw = "admin123"
+        checked = verify_password(plain_pw, user.hashed_password)
+        print(f"Password check for 'admin123': {'SUCCESS' if checked else 'FAIL'}")
 
-def check_uvicorn_process():
-    """Check if a uvicorn or FastAPI-related server is running."""
-    try:
-        procs = subprocess.check_output(['ps', 'aux'], encoding='utf-8')
-        uvicorn_lines = [line for line in procs.split('\n') if 'uvicorn' in line or 'fastapi' in line]
-        return '\n'.join(uvicorn_lines) if uvicorn_lines else "No uvicorn/FastAPI process running."
-    except Exception as e:
-        return f"Error checking processes: {e}"
+        # Manual check: show what the hash of admin123 (fresh) looks like
+        manual_hash = get_password_hash(plain_pw)
+        print("Freshly generated hash for 'admin123':", manual_hash)
+        # Also check using backend function
+        print("Does verify_password() accept freshly generated hash?", verify_password(plain_pw, manual_hash))
+    else:
+        print("admin@example.com not found in users table.")
 
-def find_nginx_conf():
-    """Locate nginx config files in backend root & analyze for upstream settings. Also check project root for nginx configuration."""
-    confs = []
-    # Check . and parent directory (project root)
-    search_dirs = ['.', '..']
-    for basedir in search_dirs:
-        for root, dirs, files in os.walk(basedir):
-            for fn in files:
-                if fn.endswith('.conf') or fn.startswith('nginx'):
-                    confs.append(os.path.join(root, fn))
-    return confs
+    db.close()
 
-def show_recent_logs(logfile_path=''):
-    """Display last 20 lines of a .log file if exists."""
-    if logfile_path and os.path.exists(logfile_path):
-        try:
-            with open(logfile_path, 'r') as f:
-                lines = f.readlines()
-                return "".join(lines[-20:])
-        except Exception as e:
-            return f"Could not read log: {e}"
-    return "No log file found."
-
-if __name__ == '__main__':
-    print("==== FastAPI/Uvicorn Process Check ====")
-    print(check_uvicorn_process())
-    print("\n==== Is 127.0.0.1:8000 Listening? ====")
-    print("Yes" if is_port_open(8000, '127.0.0.1') else "No (port 8000 is not reachable internally)")
-    print("==== Is 0.0.0.0:8000 Listening? (common for nginx/docker proxy) ====")
-    try:
-        # 0.0.0.0 is not directly connectable in most OSes, we use LAN interface IPs as a proxy check
-        import netifaces
-        any_open = False
-        for iface in netifaces.interfaces():
-            addrs = netifaces.ifaddresses(iface)
-            inet_addrs = addrs.get(netifaces.AF_INET, [])
-            for addr_dict in inet_addrs:
-                ip = addr_dict.get('addr')
-                if ip and ip != '127.0.0.1':
-                    if is_port_open(8000, ip):
-                        print(f"Yes (listening on {ip}:8000)")
-                        any_open = True
-        if not any_open:
-            print("No (port 8000 not reachable on LAN interfaces)")
-    except ImportError:
-        # netifaces not installed, fallback attempt
-        print("Skipped: Install netifaces for advanced interface scanning. [pip install netifaces]")
-    print("\n==== Nginx Configurations (if any) in Backend or Project ====")
-    confs = find_nginx_conf()
-    print(confs if confs else "No nginx config files found in backend/project directory.")
-    if confs:
-        for cf in confs:
-            print(f"--- {cf} ---")
-            try:
-                with open(cf) as f:
-                    print("".join(f.readlines()[:30]))  # Print first 30 lines for review
-            except Exception as e:
-                print(f"Error reading {cf}: {e}")
-
-    # Extra: Look for common nginx/proxy config files and document references
-    root_files = os.listdir('..')
-    for fname in root_files:
-        if 'nginx' in fname.lower() or fname.endswith('.conf'):
-            print(f"[MAY BE RELEVANT] Found potential nginx config or documentation in project root: ../{fname}")
-            try:
-                with open(os.path.join('..', fname)) as f:
-                    print("".join(f.readlines()[:30]))
-            except Exception as e:
-                print(f"Error reading {fname}: {e}")
-
-    print("\n==== Recent Gunicorn/Uvicorn .log (look in backend root) ====")
-    logfiles = [f for f in os.listdir('.') if f.endswith('.log')]
-    for logf in logfiles:
-        print(f"-- {logf} --")
-        print(show_recent_logs(logf))
+if __name__ == "__main__":
+    debug_admin_user()
