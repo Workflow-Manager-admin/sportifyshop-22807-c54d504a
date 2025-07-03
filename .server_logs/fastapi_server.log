@@ -1,7 +1,7 @@
 /home/kavia/workspace/code-generation/sportifyshop-22807-c54d504a/sports_gear_backend/venv/lib/python3.12/site-packages/pydantic/_internal/_config.py:373: UserWarning: Valid config keys have changed in V2:
 * 'orm_mode' has been renamed to 'from_attributes'
   warnings.warn(message, UserWarning)
-INFO:     Started server process [19408]
+INFO:     Started server process [911]
 INFO:     Waiting for application startup.
 Startup DB initialization failed: (sqlite3.OperationalError) no such table: product
 [SQL: DELETE FROM product;]
@@ -52,57 +52,22 @@ sqlalchemy.exc.OperationalError: (sqlite3.OperationalError) no such table: produ
 
 INFO:     Application startup complete.
 INFO:     Uvicorn running on http://0.0.0.0:3001 (Press CTRL+C to quit)
-INFO:     100.64.4.167:36836 - "HEAD /docs HTTP/1.1" 200 OK
-INFO:     100.64.4.167:36846 - "HEAD /docs HTTP/1.1" 200 OK
-INFO:     100.64.4.167:36862 - "GET /docs HTTP/1.1" 200 OK
-INFO:     100.64.4.167:36872 - "GET /docs HTTP/1.1" 200 OK
-INFO:     100.64.4.167:36886 - "GET /openapi.json HTTP/1.1" 200 OK
-INFO:     100.64.4.167:36896 - "GET /openapi.json HTTP/1.1" 200 OK
-INFO:     100.64.4.167:40798 - "OPTIONS /products?_ts=1751536841161 HTTP/1.1" 200 OK
-INFO:     100.64.4.167:40810 - "OPTIONS /categories?_ts=1751536841167 HTTP/1.1" 200 OK
-INFO:     100.64.4.167:40814 - "OPTIONS /categories?_ts=1751536841480 HTTP/1.1" 200 OK
-INFO:     100.64.4.167:40826 - "OPTIONS /categories?_ts=1751536841480 HTTP/1.1" 200 OK
-INFO:     100.64.4.167:40782 - "OPTIONS /products?_ts=1751536841167 HTTP/1.1" 200 OK
-INFO:     100.64.4.167:40828 - "OPTIONS /products?_ts=1751536841481 HTTP/1.1" 200 OK
-INFO:     100.64.4.167:40772 - "OPTIONS /categories?_ts=1751536841161 HTTP/1.1" 200 OK
-INFO:     100.64.4.167:40776 - "OPTIONS /products?_ts=1751536841480 HTTP/1.1" 200 OK
-INFO:     100.64.4.167:40854 - "GET /categories?_ts=1751536841161 HTTP/1.1" 200 OK
-INFO:     100.64.4.167:40856 - "GET /categories?_ts=1751536841480 HTTP/1.1" 200 OK
-INFO:     100.64.4.167:40878 - "GET /categories?_ts=1751536841167 HTTP/1.1" 200 OK
-INFO:     100.64.4.167:40838 - "GET /products?_ts=1751536841161 HTTP/1.1" 200 OK
-INFO:     100.64.4.167:40880 - "GET /products?_ts=1751536841480 HTTP/1.1" 200 OK
-INFO:     100.64.4.167:40858 - "GET /products?_ts=1751536841167 HTTP/1.1" 200 OK
-INFO:     100.64.4.167:40868 - "GET /products?_ts=1751536841481 HTTP/1.1" 200 OK
-INFO:     100.64.4.167:40888 - "GET /categories?_ts=1751536841480 HTTP/1.1" 200 OK
-INFO:     100.64.4.167:42676 - "OPTIONS /categories?_ts=1751536857101 HTTP/1.1" 200 OK
-INFO:     100.64.4.167:42678 - "OPTIONS /products?_ts=1751536857101 HTTP/1.1" 200 OK
-INFO:     100.64.4.167:42682 - "OPTIONS /categories?_ts=1751536857106 HTTP/1.1" 200 OK
-INFO:     100.64.4.167:42690 - "OPTIONS /products?_ts=1751536857107 HTTP/1.1" 200 OK
-INFO:     100.64.4.167:42700 - "GET /categories?_ts=1751536857101 HTTP/1.1" 200 OK
-INFO:     100.64.4.167:42724 - "GET /categories?_ts=1751536857106 HTTP/1.1" 200 OK
-INFO:     100.64.4.167:42710 - "GET /products?_ts=1751536857101 HTTP/1.1" 200 OK
-INFO:     100.64.4.167:42734 - "OPTIONS /categories?_ts=1751536857415 HTTP/1.1" 200 OK
-INFO:     100.64.4.167:42726 - "GET /products?_ts=1751536857107 HTTP/1.1" 200 OK
-INFO:     100.64.4.167:42742 - "OPTIONS /products?_ts=1751536857415 HTTP/1.1" 200 OK
-INFO:     100.64.4.167:42752 - "OPTIONS /products?_ts=1751536857416 HTTP/1.1" 200 OK
-INFO:     100.64.4.167:42750 - "OPTIONS /categories?_ts=1751536857416 HTTP/1.1" 200 OK
-INFO:     100.64.4.167:42768 - "GET /categories?_ts=1751536857415 HTTP/1.1" 200 OK
-INFO:     100.64.4.167:42786 - "GET /categories?_ts=1751536857416 HTTP/1.1" 200 OK
-INFO:     100.64.4.167:42770 - "GET /products?_ts=1751536857415 HTTP/1.1" 200 OK
-INFO:     100.64.4.167:42776 - "GET /products?_ts=1751536857416 HTTP/1.1" 200 OK
-INFO:     100.64.4.167:35868 - "OPTIONS /products?_ts=1751537047592 HTTP/1.1" 200 OK
-INFO:     100.64.4.167:35888 - "OPTIONS /categories?_ts=1751537047592 HTTP/1.1" 200 OK
-INFO:     100.64.4.167:35876 - "OPTIONS /products?_ts=1751537047891 HTTP/1.1" 200 OK
-INFO:     100.64.4.167:35852 - "OPTIONS /categories?_ts=1751537047585 HTTP/1.1" 200 OK
-INFO:     100.64.4.167:35898 - "OPTIONS /categories?_ts=1751537047891 HTTP/1.1" 200 OK
-INFO:     100.64.4.167:35910 - "OPTIONS /products?_ts=1751537047892 HTTP/1.1" 200 OK
-INFO:     100.64.4.167:35912 - "OPTIONS /products?_ts=1751537047586 HTTP/1.1" 200 OK
-INFO:     100.64.4.167:35904 - "OPTIONS /categories?_ts=1751537047892 HTTP/1.1" 200 OK
-INFO:     100.64.4.167:35956 - "GET /categories?_ts=1751537047891 HTTP/1.1" 200 OK
-INFO:     100.64.4.167:35928 - "GET /categories?_ts=1751537047892 HTTP/1.1" 200 OK
-INFO:     100.64.4.167:36014 - "GET /categories?_ts=1751537047585 HTTP/1.1" 200 OK
-INFO:     100.64.4.167:36000 - "GET /categories?_ts=1751537047592 HTTP/1.1" 200 OK
-INFO:     100.64.4.167:35930 - "GET /products?_ts=1751537047892 HTTP/1.1" 200 OK
-INFO:     100.64.4.167:35968 - "GET /products?_ts=1751537047891 HTTP/1.1" 200 OK
-INFO:     100.64.4.167:35996 - "GET /products?_ts=1751537047592 HTTP/1.1" 200 OK
-INFO:     100.64.4.167:35984 - "GET /products?_ts=1751537047586 HTTP/1.1" 200 OK
+INFO:     100.64.4.167:50714 - "HEAD /docs HTTP/1.1" 200 OK
+INFO:     100.64.4.167:50728 - "HEAD /docs HTTP/1.1" 200 OK
+INFO:     100.64.4.167:50742 - "GET /docs HTTP/1.1" 200 OK
+INFO:     100.64.4.167:50750 - "GET /docs HTTP/1.1" 200 OK
+INFO:     100.64.4.167:49948 - "GET /openapi.json HTTP/1.1" 200 OK
+INFO:     100.64.4.167:49962 - "GET /openapi.json HTTP/1.1" 200 OK
+INFO:     100.64.4.167:54428 - "HEAD /docs HTTP/1.1" 200 OK
+INFO:     100.64.4.167:54430 - "HEAD /docs HTTP/1.1" 200 OK
+INFO:     100.64.4.167:54436 - "GET /docs HTTP/1.1" 200 OK
+INFO:     100.64.4.167:54448 - "GET /docs HTTP/1.1" 200 OK
+INFO:     100.64.4.167:54458 - "GET /openapi.json HTTP/1.1" 200 OK
+INFO:     100.64.4.167:54460 - "GET /openapi.json HTTP/1.1" 200 OK
+INFO:     100.64.4.167:52596 - "GET /docs HTTP/1.1" 200 OK
+INFO:     100.64.4.167:52600 - "HEAD /docs HTTP/1.1" 200 OK
+INFO:     100.64.4.167:52606 - "HEAD /docs HTTP/1.1" 200 OK
+INFO:     100.64.4.167:52628 - "GET /docs HTTP/1.1" 200 OK
+INFO:     100.64.4.167:52630 - "GET /docs HTTP/1.1" 200 OK
+INFO:     100.64.4.167:52632 - "GET /openapi.json HTTP/1.1" 200 OK
+INFO:     100.64.4.167:52644 - "GET /openapi.json HTTP/1.1" 200 OK
