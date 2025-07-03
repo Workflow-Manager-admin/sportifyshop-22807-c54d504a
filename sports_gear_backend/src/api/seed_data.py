@@ -9,7 +9,8 @@ Seed categories and sports gear products for the backend database.
 
 from sqlalchemy.orm import Session
 from sqlalchemy import text
-from .models import ProductCategory, Product
+from .models import ProductCategory, Product, User
+from .main import get_password_hash
 
 # PUBLIC_INTERFACE
 def seed_categories_and_products(db: Session):
@@ -18,7 +19,19 @@ def seed_categories_and_products(db: Session):
     Remove all old products and seed 10 shirts, 10 trousers, 10 watches, and 10 shoes
     with images and prices. Ensures required product categories exist.
     Uses unique, valid free stock images and realistic product details.
+    Also ensures an admin/test user (admin@example.com/admin123) exists with a hashed password.
     """
+    # ---- Admin/test user - ensure present ---- #
+    admin_email = "admin@example.com"
+    admin_password = "admin123"
+    existing_admin = db.query(User).filter_by(email=admin_email).first()
+    if not existing_admin:
+        hashed = get_password_hash(admin_password)
+        admin_user = User(email=admin_email, hashed_password=hashed, full_name="Admin User")
+        db.add(admin_user)
+        db.commit()
+        db.refresh(admin_user)
+
     # ---- Categories - ensure present ---- #
     categories_data = [
         {"name": "Shoes", "description": "Running, training, sports shoes"},
