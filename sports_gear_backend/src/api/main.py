@@ -52,9 +52,17 @@ app.add_middleware(
 
 @app.on_event("startup")
 def startup_event():
-    """Initialize the database (create tables if not exist)."""
+    """Initialize the database (create tables if not exist), and seed products/categories."""
     try:
         models.init_db()
+        # Seed demo/real categories and product data if not present
+        from .seed_data import seed_categories_and_products
+        db_session_gen = get_db()
+        db = next(db_session_gen)
+        try:
+            seed_categories_and_products(db)
+        finally:
+            db.close()
     except Exception as exc:
         import traceback
         print("Startup DB initialization failed:", exc, traceback.format_exc())
