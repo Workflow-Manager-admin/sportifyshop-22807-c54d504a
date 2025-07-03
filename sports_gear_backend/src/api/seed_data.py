@@ -1,157 +1,191 @@
 """
-Seed script for sports gear categories and products.
-
-Seeds the database with a static set of sports gear categories and products,
-with fixed names, public static image URLs, INR prices, and fixed available sizes.
-Run idempotently and always ensures the same set of products are available in the catalog.
-
-There are NO dynamic, real-time, or external updates—this remains constant across restarts.
-
-After seeding, the /products endpoint always reflects the default set and values.
+Seed script for restricted sports gear categories and products:
+Seeds only the following product types: balls, Apparel, shoes, socks, bat, hockey bat, baseball bat.
+Each type has exactly 10 unique products with default price, valid public image URL, and consistent size where appropriate.
+Removes all other categories and products from the seeding logic.
 """
 
 from sqlalchemy.orm import Session
 from . import models
 
-# ------------------ STATIC DEFAULT CATEGORIES AND PRODUCTS ------------------
-
+# --- STATIC CATEGORIES ---
 CATEGORIES = [
-    {"name": "Shoes", "description": "Running, training, and sport-specific shoes"},
-    {"name": "Balls", "description": "Footballs, basketballs, cricket, tennis, volleyball, and more"},
-    {"name": "Apparel", "description": "Sports t-shirts, shorts, tracksuits, and gear"},
-    {"name": "Equipment", "description": "Accessories and gear for sports and fitness"},
-    {"name": "Bags", "description": "Sports bags and backpacks"},
-    {"name": "Rackets", "description": "Badminton, tennis, squash rackets"},
-    {"name": "Protective Gear", "description": "Helmets, pads, guards, mouthpieces, eyewear"},
-    {"name": "Accessories", "description": "Socks, bottles, caps, wristbands, towels"},
-    {"name": "Fitness", "description": "Home gym, weights, yoga, fitness tools"},
+    {"name": "Balls", "description": "Sports balls including cricket, football, tennis, and more"},
+    {"name": "Apparel", "description": "Sports clothing including jerseys, shorts, tracksuits"},
+    {"name": "Shoes", "description": "Running shoes and athletic footwear"},
+    {"name": "Socks", "description": "Sports socks for comfort and performance"},
+    {"name": "Bat", "description": "Cricket bats for all levels"},
+    {"name": "Hockey Bat", "description": "High-quality hockey bats"},
+    {"name": "Baseball Bat", "description": "Durable baseball bats for all ages"},
 ]
 
-PRODUCTS = [
-    # SHOES
-    {
-        "name": "Nike Revolution 6 Road Running Shoes",
-        "description": "Men's lightweight running shoes for daily runs.",
-        "image_url": "https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=600&q=80",
-        "price": 4599,
-        "available_sizes": "UK7,UK8,UK9,UK10,UK11",
-        "category_name": "Shoes",
-    },
-    {
-        "name": "Adidas Predator Edge Football Boots",
-        "description": "Durable turf shoes for pitch control.",
-        "image_url": "https://assets.adidas.com/images/w_600,f_auto,q_auto/87669b74e07244b9bef5ae5501238a3d_9366/Predator_Edge_4_Firm_Ground_Boots_Black_GW0972_01_standard.jpg",
-        "price": 3299,
-        "available_sizes": "UK6,UK7,UK8,UK9,UK10",
-        "category_name": "Shoes",
-    },
-    {
-        "name": "Puma Softride Rift Running Shoes",
-        "description": "Ultra-soft sports running shoes for men.",
-        "image_url": "https://images.puma.com/image/upload/f_auto,q_auto,b_rgb:fafafa,w_600,h_600/global/377048/03/sv01/fnd/IND/fmt/png/Softride-Rift-Men's-Running-Shoes",
-        "price": 2999,
-        "available_sizes": "UK5,UK6,UK7,UK8,UK9,UK10",
-        "category_name": "Shoes",
-    },
-    # BALLS
-    {
-        "name": "Cosco Brasil Football Size-5",
-        "description": "Quality football for every field.",
-        "image_url": "https://static-01.daraz.pk/p/d65bb89ced4f09bb260101ef0ac63f1f.jpg",
-        "price": 749,
-        "available_sizes": "5",
-        "category_name": "Balls",
-    },
-    {
-        "name": "Nivia Graffiti Basketball Size-7",
-        "description": "Premium grip and bounce on all courts.",
-        "image_url": "https://rukminim2.flixcart.com/image/416/416/ke1pnrk0/basketball/i/b/a/7-2765graffitiorange-nivia-original-imafutkuss3uxqrv.jpeg",
-        "price": 840,
-        "available_sizes": "7",
-        "category_name": "Balls",
-    },
-    # APPAREL
-    {
-        "name": "Adidas Entrada 22 Jersey",
-        "description": "Lightweight, moisture-absorbing sports jersey.",
-        "image_url": "https://assets.adidas.com/images/w_600,f_auto,q_auto/c9b851c802d04676a955afec0127853c_9366/Entrada_22_Jersey_White_H57564_01_laydown.jpg",
-        "price": 1199,
-        "available_sizes": "S,M,L,XL,XXL",
-        "category_name": "Apparel",
-    },
-    {
-        "name": "Nike Dri-FIT Academy Shorts",
-        "description": "Breathable mesh shorts for training comfort.",
-        "image_url": "https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco/33e129b9115542d5b5b7f793c8e1a58a/dri-fit-academy-mens-soccer-shorts-xsKfsT.png",
-        "price": 2195,
-        "available_sizes": "S,M,L,XL",
-        "category_name": "Apparel",
-    },
-    # EQUIPMENT
-    {
-        "name": "HEAD Pro Tennis Racket Overgrip",
-        "description": "Superior grip and sweat absorption for rackets.",
-        "image_url": "https://www.head.com/media/catalog/product/h/e/head-pro-overgrip-white-tennis-pack-3-overgrip-281704_wh.jpg",
-        "price": 545,
-        "available_sizes": "Standard",
-        "category_name": "Equipment",
-    },
-    # BAGS
-    {
-        "name": "Wildcraft HypaDura Bolt Backpack",
-        "description": "Multi-compartment backpack for sports gear.",
-        "image_url": "https://wildcraftimages.s3.ap-south-1.amazonaws.com/img/bags/11968-black-2.jpg",
-        "price": 2650,
-        "available_sizes": "Large",
-        "category_name": "Bags",
-    },
-    # RACKETS
-    {
-        "name": "Yonex Nanoray 18i Badminton Racket",
-        "description": "Superlight, fast head speed badminton racket.",
-        "image_url": "https://cdn.shopify.com/s/files/1/0618/7650/7113/products/yonex-nanoray-18i-badminton-racket-1.jpg",
-        "price": 2399,
-        "available_sizes": "Standard",
-        "category_name": "Rackets",
-    },
-    # PROTECTIVE GEAR
-    {
-        "name": "SG Cricket Batting Pads - Club",
-        "description": "Lightweight, durable cricket pads.",
-        "image_url": "https://static-01.daraz.pk/p/570ad6f01220060da2939b16c046263e.jpg",
-        "price": 1399,
-        "available_sizes": "Men,Youth",
-        "category_name": "Protective Gear",
-    },
-    # ACCESSORIES
-    {
-        "name": "Reebok Training Water Bottle",
-        "description": "Durable BPA-free water bottle with twist cap.",
-        "image_url": "https://assets.adidas.com/images/w_600,f_auto,q_auto,fl_lossy,c_fill,g_auto/44e06e0a5c0344c3a409af920085dfa2_9366/Training_Water_Bottle_0.75_L_Blue_CF3522_01_standard.jpg",
-        "price": 499,
-        "available_sizes": "600ml",
-        "category_name": "Accessories",
-    },
-    # FITNESS
-    {
-        "name": "Strauss Anti-Skid Yoga Mat",
-        "description": "Lightweight, anti-slip, roll-up yoga mat.",
-        "image_url": "https://5.imimg.com/data5/SELLER/Default/2023/8/337514916/KW/JT/CK/183243041/anti-skid-yoga-mat.jpg",
-        "price": 799,
-        "available_sizes": "6mm,8mm",
-        "category_name": "Fitness",
-    },
+# --- PRODUCT URLS ---
+BALL_IMAGES = [
+    "https://images.unsplash.com/photo-1517649763962-0c623066013b?auto=format&fit=crop&w=500&q=80",  # Cricket ball
+    "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=500&q=80",  # Football
+    "https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=500&q=80",  # Basketball
+    "https://images.unsplash.com/photo-1519864600265-abb23847ef2c?auto=format&fit=crop&w=500&q=80",  # Tennis ball
+    "https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=500&q=80",  # Volleyball
+    "https://images.unsplash.com/photo-1508873699372-7aeab60b44c9?auto=format&fit=crop&w=500&q=80",  # Rugby ball
+    "https://images.unsplash.com/photo-1448894977689-142b4048a28c?auto=format&fit=crop&w=500&q=80",  # Baseball
+    "https://images.unsplash.com/photo-1515524738708-327f6b0037a7?auto=format&fit=crop&w=500&q=80",  # Softball
+    "https://images.unsplash.com/photo-1516728778615-2d590ea185ee?auto=format&fit=crop&w=500&q=80",  # Handball
+    "https://images.unsplash.com/photo-1514511634509-579097eber14?auto=format&fit=crop&w=500&q=80",  # Hockey ball
 ]
+APPAREL_IMAGES = [
+    "https://images.unsplash.com/photo-1512436991641-6745cdb1723f?auto=format&fit=crop&w=600&q=80",  # Jersey
+    "https://images.unsplash.com/photo-1526178613658-3c73fcf1805c?auto=format&fit=crop&w=600&q=80",  # Shorts
+    "https://images.unsplash.com/photo-1515984979728-cb7b4a2d1d1c?auto=format&fit=crop&w=600&q=80",  # Hoodie
+    "https://images.unsplash.com/photo-1519710164239-da123dc03ef4?auto=format&fit=crop&w=600&q=80",  # Tracksuit
+    "https://images.unsplash.com/photo-1531259683007-016a7b628fc3?auto=format&fit=crop&w=600&q=80",  # Tank top
+    "https://images.unsplash.com/photo-1530847887473-93c3d1a1eb0d?auto=format&fit=crop&w=600&q=80",  # Training tee
+    "https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?auto=format&fit=crop&w=600&q=80",  # Sleeveless
+    "https://images.unsplash.com/photo-1526271083670-92ee58c7c51d?auto=format&fit=crop&w=600&q=80",  # Compression shirt
+    "https://images.unsplash.com/photo-1465188162913-8a1049b2a8ff?auto=format&fit=crop&w=600&q=80",  # Sport bra
+    "https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?auto=format&fit=crop&w=600&q=80",  # Training pants
+]
+SHOES_IMAGES = [
+    "https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=600&q=80",
+    "https://images.unsplash.com/photo-1517263904808-5dc0d07fe126?auto=format&fit=crop&w=600&q=80",
+    "https://images.unsplash.com/photo-1465101178521-c1a9136a1803?auto=format&fit=crop&w=600&q=80",
+    "https://images.unsplash.com/photo-1456327102063-fb5054efe647?auto=format&fit=crop&w=600&q=80",
+    "https://images.unsplash.com/photo-1468476396571-cfc36d83f2b1?auto=format&fit=crop&w=600&q=80",
+    "https://images.unsplash.com/photo-1504215680853-026ed2a45def?auto=format&fit=crop&w=600&q=80",
+    "https://images.unsplash.com/photo-1470246973918-29a93221c455?auto=format&fit=crop&w=600&q=80",
+    "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=600&q=80",
+    "https://images.unsplash.com/photo-1519864600265-abb23847ef2c?auto=format&fit=crop&w=600&q=80",
+    "https://images.unsplash.com/photo-1508614969033-2473d392e2c5?auto=format&fit=crop&w=600&q=80",
+]
+SOCKS_IMAGES = [
+    "https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=500&q=80",  # White
+    "https://images.unsplash.com/photo-1519864600265-abb23847ef2c?auto=format&fit=crop&w=500&q=80",  # Black
+    "https://images.unsplash.com/photo-1516483638261-f4dbaf036963?auto=format&fit=crop&w=500&q=80",  # Red
+    "https://images.unsplash.com/photo-1468476396571-cfc36d83f2b1?auto=format&fit=crop&w=500&q=80",  # Blue
+    "https://images.unsplash.com/photo-1456327102063-fb5054efe647?auto=format&fit=crop&w=500&q=80",  # Sport
+    "https://images.unsplash.com/photo-1516715094483-1c9b7c3c4d19?auto=format&fit=crop&w=500&q=80",  # Running
+    "https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?auto=format&fit=crop&w=500&q=80",  # Nylon
+    "https://images.unsplash.com/photo-1514432324607-a09d9c10a43c?auto=format&fit=crop&w=500&q=80",  # Ankle
+    "https://images.unsplash.com/photo-1513267048332-d994b6d7f6ce?auto=format&fit=crop&w=500&q=80",  # Cushion
+    "https://images.unsplash.com/photo-1506501139099-cb7466e021b7?auto=format&fit=crop&w=500&q=80",  # Crew
+]
+BAT_IMAGES = [
+    "https://cdn.pixabay.com/photo/2016/12/27/16/33/cricket-1937286_960_720.jpg",
+    "https://5.imimg.com/data5/SELLER/Default/2020/8/IW/MB/YG/24166495/english-willow-cricket-bat-500x500.jpg",
+    "https://images.unsplash.com/photo-1516747773441-f858a1e9b441?auto=format&fit=crop&w=500&q=80",
+    "https://m.media-amazon.com/images/I/41r0HeoPRTL.jpg",
+    "https://cdn.shopify.com/s/files/1/0551/9246/9116/products/SGR17INFA020-BAT_800x.jpg?v=1628745408",
+    "https://www.pngitem.com/pimgs/m/288-2884690_cricket-bat-png-transparent-png.png",
+    "https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=500&q=80",
+    "https://static-01.daraz.pk/p/0e57ffed37e27eab57d0e892bdecf8d8.jpg",
+    "https://image.shutterstock.com/image-photo/cricket-bat-isolated-on-white-260nw-1366933274.jpg",
+    "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=500&q=80"
+]
+HOCKEY_BAT_IMAGES = [
+    "https://m.media-amazon.com/images/I/61rOHAyYtWL._SL1500_.jpg",
+    "https://n1.sdlcdn.com/imgs/a/2/b/Hockey-Bat-SDL173961455-1-4f7e2.jpg",
+    "https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=600&q=80",
+    "https://qph.cf2.quoracdn.net/main-qimg-dcb2ef715b7a9921629cbd228e251fae-lq",
+    "https://m.media-amazon.com/images/I/61R7GZ0v4aL._SX342_.jpg",
+    "https://cdn11.bigcommerce.com/s-47p22kzvda/images/stencil/1280x1280/products/464/1809/JK-Hockey-Bat-Red__23288.1626343397.jpg?c=2",
+    "https://images.unsplash.com/photo-1519864600265-abb23847ef2c?auto=format&fit=crop&w=600&q=80",
+    "https://rukminim2.flixcart.com/image/416/416/kh80v0w0/hockey-stick/i/t/l/36-5-hockey-stick-wish-original-imafx3czpajthj6j.jpeg?q=70",
+    "https://www.khelmart.com/blogs/wp-content/uploads/2021/04/Top-8-Hockey-Bat-1.jpg",
+    "https://images.unsplash.com/photo-1506501139099-cb7466e021b7?auto=format&fit=crop&w=500&q=80",
+]
+BASEBALL_BAT_IMAGES = [
+    "https://images.unsplash.com/photo-1448894977689-142b4048a28c?auto=format&fit=crop&w=600&q=80",
+    "https://static.toiimg.com/thumb/msid-72769541,width-1280,resizemode-4/72769541.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/Baseball-bat.jpg/800px-Baseball-bat.jpg",
+    "https://5.imimg.com/data5/TG/QF/MY-2207665/wooden-baseball-bat-500x500.jpg",
+    "https://www.hamillbaseball.com/library/images/SSK-BLUE.png",
+    "https://images.unsplash.com/photo-1508614969033-2473d392e2c5?auto=format&fit=crop&w=600&q=80",
+    "https://m.media-amazon.com/images/I/41n1yeYx5kL.jpg",
+    "https://www.anniegarland.com/wp-content/uploads/2020/11/baseball-bat.jpg",
+    "https://dksports.com/cdn/shop/products/WOODEN_BASEBALL_BAT.jpg?v=1634761875",
+    "https://target.scene7.com/is/image/Target/GUEST_680ca026-d25e-4d83-8c67-e74044e3de85?wid=488&hei=488&fmt=pjpeg",
+]
+
+# --- DEFAULT VALUES ---
+CATEGORY_INFO = {
+    "Balls": {
+        "type_prefix": "Sports Ball",
+        "default_price": 20.0,
+        "default_sizes": "4,5",
+        "images": BALL_IMAGES,
+    },
+    "Apparel": {
+        "type_prefix": "Jersey",
+        "default_price": 30.0,
+        "default_sizes": "S,M,L,XL",
+        "images": APPAREL_IMAGES,
+    },
+    "Shoes": {
+        "type_prefix": "Running Shoe",
+        "default_price": 40.0,
+        "default_sizes": "UK7,UK8,UK9,UK10",
+        "images": SHOES_IMAGES,
+    },
+    "Socks": {
+        "type_prefix": "Sports Sock",
+        "default_price": 8.0,
+        "default_sizes": "M,L,XL",
+        "images": SOCKS_IMAGES,
+    },
+    "Bat": {
+        "type_prefix": "Cricket Bat",
+        "default_price": 60.0,
+        "default_sizes": "Standard",
+        "images": BAT_IMAGES,
+    },
+    "Hockey Bat": {
+        "type_prefix": "Hockey Bat",
+        "default_price": 55.0,
+        "default_sizes": "Standard",
+        "images": HOCKEY_BAT_IMAGES,
+    },
+    "Baseball Bat": {
+        "type_prefix": "Baseball Bat",
+        "default_price": 50.0,
+        "default_sizes": "Standard",
+        "images": BASEBALL_BAT_IMAGES,
+    },
+}
+
+# --- PRODUCT PREP ---
+PRODUCTS = []
+for cat in CATEGORIES:
+    catname = cat["name"]
+    info = CATEGORY_INFO[catname]
+    for i in range(1, 11):
+        PRODUCTS.append({
+            "name": f"{info['type_prefix']} {i}",
+            "description": f"{info['type_prefix']} model no. {i}",
+            "image_url": info["images"][(i - 1) % len(info["images"])],
+            "price": info["default_price"],
+            "available_sizes": info["default_sizes"],
+            "category_name": catname,
+        })
 
 # PUBLIC_INTERFACE
 def seed_categories_and_products(db: Session):
     """
-    PUBLIC_INTERFACE: Seed the sports gear categories and products with static, known-good data only.
-
-    Seeds categories, then a fixed product set for each category. Skips duplicates on reruns.
-    No dynamic fetching, no real-time/dynamic sources, no updates after initial seed.
+    PUBLIC_INTERFACE: Seed only categories and products for balls, Apparel, shoes, socks, bat, hockey bat, baseball bat.
+    All other categories/products removed. Always creates 10 products per type, unique names, with default price, sizes, and public images.
     """
-    # Insert all categories if missing
+    # Delete any products/categories not in our whitelist to ensure idempotency
+    allowed_cat_names = set([c["name"] for c in CATEGORIES])
+    # Remove ALL products not in allowed categories
+    for prod in db.query(models.Product).all():
+        cat = db.query(models.ProductCategory).filter_by(id=prod.category_id).first()
+        if cat is None or cat.name not in allowed_cat_names:
+            db.delete(prod)
+    db.commit()
+    # Remove all categories not in allowed list
+    for cat in db.query(models.ProductCategory).all():
+        if cat.name not in allowed_cat_names:
+            db.delete(cat)
+    db.commit()
+    # Insert/update allowed categories
     name_to_cat = {}
     for c in CATEGORIES:
         category = db.query(models.ProductCategory).filter_by(name=c["name"]).first()
@@ -161,7 +195,7 @@ def seed_categories_and_products(db: Session):
             db.commit()
         name_to_cat[c["name"]] = category
     db.commit()
-    # Insert products (unique by name+category), forcibly overwrite description/image/price/sizes
+    # Insert/update 10 products for each category
     for item in PRODUCTS:
         category = name_to_cat.get(item["category_name"])
         if not category:

@@ -1,19 +1,19 @@
 /home/kavia/workspace/code-generation/sportifyshop-22807-c54d504a/sports_gear_backend/venv/lib/python3.12/site-packages/pydantic/_internal/_config.py:373: UserWarning: Valid config keys have changed in V2:
 * 'orm_mode' has been renamed to 'from_attributes'
   warnings.warn(message, UserWarning)
-INFO:     Started server process [27445]
+INFO:     Started server process [28090]
 INFO:     Waiting for application startup.
 INFO:     Application startup complete.
 INFO:     Uvicorn running on http://0.0.0.0:3001 (Press CTRL+C to quit)
-INFO:     100.64.4.167:40998 - "OPTIONS /categories HTTP/1.1" 200 OK
-INFO:     100.64.4.167:41010 - "OPTIONS /categories HTTP/1.1" 200 OK
-INFO:     100.64.4.167:41020 - "OPTIONS /categories HTTP/1.1" 200 OK
-INFO:     100.64.4.167:41028 - "OPTIONS /categories HTTP/1.1" 200 OK
-INFO:     100.64.4.167:40990 - "GET /products HTTP/1.1" 200 OK
-INFO:     100.64.4.167:41036 - "GET /categories HTTP/1.1" 200 OK
-INFO:     100.64.4.167:41044 - "GET /products HTTP/1.1" 200 OK
-INFO:     100.64.4.167:41052 - "GET /categories HTTP/1.1" 200 OK
-INFO:     100.64.4.167:41054 - "GET /categories HTTP/1.1" 200 OK
-INFO:     100.64.4.167:41060 - "GET /products HTTP/1.1" 200 OK
-INFO:     100.64.4.167:41074 - "GET /categories HTTP/1.1" 200 OK
-INFO:     100.64.4.167:41072 - "GET /products HTTP/1.1" 200 OK
+INFO:     100.64.4.167:38812 - "GET /categories HTTP/1.1" 200 OK
+INFO:     100.64.4.167:38818 - "GET /products HTTP/1.1" 200 OK
+INFO:     100.64.4.167:38820 - "GET /categories HTTP/1.1" 200 OK
+INFO:     100.64.4.167:38830 - "GET /products HTTP/1.1" 200 OK
+INFO:     100.64.4.167:38838 - "GET /categories HTTP/1.1" 200 OK
+INFO:     100.64.4.167:38848 - "GET /products HTTP/1.1" 200 OK
+INFO:     100.64.4.167:38856 - "GET /categories HTTP/1.1" 200 OK
+INFO:     100.64.4.167:38866 - "GET /products HTTP/1.1" 200 OK
+INFO:     100.64.4.167:51850 - "OPTIONS /products?category=9 HTTP/1.1" 200 OK
+INFO:     100.64.4.167:51864 - "GET /products?category=9 HTTP/1.1" 200 OK
+INFO:     100.64.4.167:51872 - "OPTIONS /products?category=8 HTTP/1.1" 200 OK
+INFO:     100.64.4.167:51886 - "GET /products?category=8 HTTP/1.1" 200 OK
