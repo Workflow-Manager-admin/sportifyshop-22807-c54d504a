@@ -50,7 +50,7 @@ def seed_categories_and_products(db: Session):
         categories[cat["name"]] = existing
 
     # ---- Products: remove ALL old, then seed exactly 10 of each required type ---- #
-    db.execute(text("DELETE FROM product;"))  # hard reset
+    db.execute(text("DELETE FROM products;"))  # FIXED: correct table name for product deletion
     db.commit()
 
     demo_products = []

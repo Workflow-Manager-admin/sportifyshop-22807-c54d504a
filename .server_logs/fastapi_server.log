@@ -1,7 +1,7 @@
 /home/kavia/workspace/code-generation/sportifyshop-22807-c54d504a/sports_gear_backend/venv/lib/python3.12/site-packages/pydantic/_internal/_config.py:373: UserWarning: Valid config keys have changed in V2:
 * 'orm_mode' has been renamed to 'from_attributes'
   warnings.warn(message, UserWarning)
-INFO:     Started server process [21294]
+INFO:     Started server process [22145]
 INFO:     Waiting for application startup.
 Startup DB initialization failed: (sqlite3.OperationalError) no such table: product
 [SQL: DELETE FROM product;]
@@ -17,7 +17,7 @@ The above exception was the direct cause of the following exception:
 Traceback (most recent call last):
   File "/home/kavia/workspace/code-generation/sportifyshop-22807-c54d504a/sports_gear_backend/src/api/main.py", line 88, in startup_event
     seed_categories_and_products(db)
-  File "/home/kavia/workspace/code-generation/sportifyshop-22807-c54d504a/sports_gear_backend/src/api/seed_data.py", line 40, in seed_categories_and_products
+  File "/home/kavia/workspace/code-generation/sportifyshop-22807-c54d504a/sports_gear_backend/src/api/seed_data.py", line 53, in seed_categories_and_products
     db.execute(text("DELETE FROM product;"))  # hard reset
     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
   File "/home/kavia/workspace/code-generation/sportifyshop-22807-c54d504a/sports_gear_backend/venv/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 2365, in execute
@@ -52,25 +52,25 @@ sqlalchemy.exc.OperationalError: (sqlite3.OperationalError) no such table: produ
 
 INFO:     Application startup complete.
 INFO:     Uvicorn running on http://0.0.0.0:3001 (Press CTRL+C to quit)
-INFO:     100.64.4.167:39430 - "OPTIONS /categories?_ts=1751539666796 HTTP/1.1" 200 OK
-INFO:     100.64.4.167:39456 - "OPTIONS /products?_ts=1751539666801 HTTP/1.1" 200 OK
-INFO:     100.64.4.167:39444 - "OPTIONS /categories?_ts=1751539666800 HTTP/1.1" 200 OK
-INFO:     100.64.4.167:39442 - "OPTIONS /products?_ts=1751539666797 HTTP/1.1" 200 OK
-INFO:     100.64.4.167:39472 - "GET /categories?_ts=1751539666796 HTTP/1.1" 200 OK
-INFO:     100.64.4.167:39494 - "GET /categories?_ts=1751539666800 HTTP/1.1" 200 OK
-INFO:     100.64.4.167:39478 - "GET /products?_ts=1751539666801 HTTP/1.1" 200 OK
-INFO:     100.64.4.167:39500 - "GET /products?_ts=1751539666797 HTTP/1.1" 200 OK
-INFO:     100.64.4.167:39518 - "OPTIONS /products?_ts=1751539667109 HTTP/1.1" 200 OK
-INFO:     100.64.4.167:39514 - "OPTIONS /categories?_ts=1751539667109 HTTP/1.1" 200 OK
-INFO:     100.64.4.167:39524 - "OPTIONS /categories?_ts=1751539667110 HTTP/1.1" 200 OK
-INFO:     100.64.4.167:39528 - "OPTIONS /products?_ts=1751539667110 HTTP/1.1" 200 OK
-INFO:     100.64.4.167:39544 - "OPTIONS /products?_ts=1751539667337 HTTP/1.1" 200 OK
-INFO:     100.64.4.167:39566 - "GET /categories?_ts=1751539667110 HTTP/1.1" 200 OK
-INFO:     100.64.4.167:39576 - "GET /categories?_ts=1751539667109 HTTP/1.1" 200 OK
-INFO:     100.64.4.167:39582 - "GET /products?_ts=1751539667110 HTTP/1.1" 200 OK
-INFO:     100.64.4.167:39550 - "GET /products?_ts=1751539667109 HTTP/1.1" 200 OK
-INFO:     100.64.4.167:39590 - "OPTIONS /products?_ts=1751539667376 HTTP/1.1" 200 OK
-INFO:     100.64.4.167:39600 - "GET /products?_ts=1751539667337 HTTP/1.1" 200 OK
-INFO:     100.64.4.167:39606 - "GET /products?_ts=1751539667376 HTTP/1.1" 200 OK
-INFO:     100.64.4.167:39618 - "OPTIONS /products?_ts=1751539668023 HTTP/1.1" 200 OK
-INFO:     100.64.4.167:39622 - "GET /products?_ts=1751539668023 HTTP/1.1" 200 OK
+INFO:     100.64.4.167:57888 - "OPTIONS /categories?_ts=1751539747898 HTTP/1.1" 200 OK
+INFO:     100.64.4.167:57904 - "OPTIONS /products?_ts=1751539747899 HTTP/1.1" 200 OK
+INFO:     100.64.4.167:57906 - "OPTIONS /categories?_ts=1751539747903 HTTP/1.1" 200 OK
+INFO:     100.64.4.167:57908 - "OPTIONS /products?_ts=1751539747903 HTTP/1.1" 200 OK
+INFO:     100.64.4.167:57912 - "GET /categories?_ts=1751539747898 HTTP/1.1" 200 OK
+INFO:     100.64.4.167:57926 - "GET /categories?_ts=1751539747903 HTTP/1.1" 200 OK
+INFO:     100.64.4.167:57916 - "GET /products?_ts=1751539747899 HTTP/1.1" 200 OK
+INFO:     100.64.4.167:57938 - "GET /products?_ts=1751539747903 HTTP/1.1" 200 OK
+INFO:     100.64.4.167:57948 - "OPTIONS /categories?_ts=1751539748310 HTTP/1.1" 200 OK
+INFO:     100.64.4.167:57968 - "OPTIONS /categories?_ts=1751539748311 HTTP/1.1" 200 OK
+INFO:     100.64.4.167:57952 - "OPTIONS /products?_ts=1751539748311 HTTP/1.1" 200 OK
+INFO:     100.64.4.167:57984 - "OPTIONS /products?_ts=1751539748311 HTTP/1.1" 200 OK
+INFO:     100.64.4.167:57990 - "OPTIONS /products?_ts=1751539748462 HTTP/1.1" 200 OK
+INFO:     100.64.4.167:58006 - "OPTIONS /products?_ts=1751539748484 HTTP/1.1" 200 OK
+INFO:     100.64.4.167:58012 - "GET /categories?_ts=1751539748310 HTTP/1.1" 200 OK
+INFO:     100.64.4.167:58014 - "GET /categories?_ts=1751539748311 HTTP/1.1" 200 OK
+INFO:     100.64.4.167:58016 - "GET /products?_ts=1751539748311 HTTP/1.1" 200 OK
+INFO:     100.64.4.167:58022 - "GET /products?_ts=1751539748484 HTTP/1.1" 200 OK
+INFO:     100.64.4.167:58020 - "GET /products?_ts=1751539748462 HTTP/1.1" 200 OK
+INFO:     100.64.4.167:58028 - "GET /products?_ts=1751539748311 HTTP/1.1" 200 OK
+INFO:     100.64.4.167:58030 - "OPTIONS /products?_ts=1751539749158 HTTP/1.1" 200 OK
+INFO:     100.64.4.167:58036 - "GET /products?_ts=1751539749158 HTTP/1.1" 200 OK
