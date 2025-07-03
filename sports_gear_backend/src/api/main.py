@@ -225,8 +225,57 @@ def db_health_check(db: Session = Depends(get_db)):
 # ------------------ AUTH & USER MANAGEMENT -------------------
 
 # PUBLIC_INTERFACE
-@app.post("/auth/register", response_model=UserProfileOut, tags=["auth"], summary="User registration")
+@app.post(
+    "/auth/register",
+    response_model=UserProfileOut,
+    tags=["auth"],
+    summary="User registration",
+    responses={
+        201: {
+            "description": "Successful registration, user created",
+            "model": UserProfileOut,
+        },
+        409: {
+            "description": "Email address is already registered. Registration cannot proceed.",
+            "content": {
+                "application/json": {
+                    "example": {
+                        "detail": "Email already registered"
+                    }
+                }
+            },
+        },
+        400: {
+            "description": "General registration error (e.g., db error, failed creation)",
+            "content": {
+                "application/json": {
+                    "example": {
+                        "detail": "Could not create user"
+                    }
+                }
+            },
+        }
+    },
+)
 def register_user(data: UserRegisterRequest, db: Session = Depends(get_db)):
+    """
+    Registers a new user by email, password, and full name.
+
+    - Returns: user profile object on success (201).
+    - Raises:
+        - 409: If the email address is already registered and cannot be used.
+        - 400: If the user could not be created for other reasons.
+
+    Request body:
+        - email: Email address of the user (must be unique)
+        - password: User's password (min 6 characters)
+        - full_name: Optional full name for the user
+
+    Response:
+        - On success: UserProfileOut (user details)
+        - On duplicate email: {"detail": "Email already registered"} (409)
+        - On other error: {"detail": "..."} (400)
+    """
     if db.query(models.User).filter(models.User.email == data.email).first():
         raise HTTPException(status_code=409, detail="Email already registered")
     user = models.User(
