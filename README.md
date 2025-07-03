@@ -1,5 +1,10 @@
 # sportifyshop-22807-c54d504a
 
+---
+🚩 **IMPORTANT: For Docker, VM, Codespaces, or Cloud IDEs, ALWAYS use `--host 0.0.0.0` when running the backend, or use the provided `run_backend.sh` script!**
+- If you only use `127.0.0.1` (the default), the server will not be accessible from outside the container/VM/cloud, and the frontend or your browser may NOT be able to connect.
+---
+
 ## Backend Setup – `sports_gear_backend`
 
 This backend is built with FastAPI and uses SQLite via SQLAlchemy ORM. It provides the data models and server structure for the Sports Gear ecommerce shop.
@@ -36,14 +41,20 @@ Uses SQLite DB (`sports_gear.db` by default, override with `SQLITE_DB_FILENAME` 
 #### Recommended: Run backend from the sports_gear_backend folder
 
 1. Install dependencies (`pip install -r requirements.txt`)
-2. Run the server:
-   - From inside `sports_gear_backend` folder:  
+2. Run the server (**highly recommended**):  
+   - From inside `sports_gear_backend` folder:
      ```
-     uvicorn src.api.main:app --reload
+     bash run_backend.sh
+     ```
+     *(This script runs uvicorn with `--host 0.0.0.0` for maximum compatibility)*
+
+   - OR manually:
+     ```
+     uvicorn src.api.main:app --reload --host 0.0.0.0
      ```
      OR (to ensure `src` always imports cleanly regardless of CWD):
      ```
-     uvicorn main:app --reload
+     uvicorn main:app --reload --host 0.0.0.0
      ```
      This uses `main.py` which sets up Python path for `src` imports.
 
@@ -51,8 +62,10 @@ Uses SQLite DB (`sports_gear.db` by default, override with `SQLITE_DB_FILENAME` 
      If running from project root (`sportifyshop-22807-c54d504a/`), you should:
      ```
      cd sports_gear_backend
-     uvicorn main:app --reload
+     bash run_backend.sh
      ```
+     (Or use `uvicorn main:app --reload --host 0.0.0.0`)
+
      Trying to run directly from project root with a command like
      ```
      uvicorn sports_gear_backend.src.api.main:app --reload
