@@ -1,64 +1,80 @@
+"""
+Script to purge all products and associated images from the local database and storage.
+
+Run this script directly to delete ALL current product data and images.
+"""
+
 import os
-import sqlalchemy
-from sqlalchemy.orm import sessionmaker
-from sports_gear_backend.src.models import Product, UploadedImage
-from dotenv import load_dotenv
+import sqlite3
 
-"""
-Script to purge all products, product-category relationships, and uploaded images from the database and filesystem.
-After running this, the catalog and image folders will be empty/clean.
-"""
+# Database and images directory configuration
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+DB_PATH = os.path.join(BASE_DIR, "sports_gear.db")
+IMAGES_DIR = os.path.join(BASE_DIR, "uploaded_images")
 
-# Load .env configuration for DB connection etc
-load_dotenv()
+def delete_all_products():
+    """
+    Delete all products from the products table in the database.
+    """
+    if not os.path.exists(DB_PATH):
+        print(f"No database found at {DB_PATH}. Nothing to do.")
+        return
 
-DB_URL = os.getenv("DATABASE_URL", None)
-SQLITE_PATH = os.path.join(os.path.dirname(__file__), "../sports_gear.db")
-IMAGE_UPLOAD_FOLDER = os.path.join(os.path.dirname(__file__), "uploaded_images")
-
-def remove_all_images_from_folder(upload_folder):
-    if os.path.isdir(upload_folder):
-        for filename in os.listdir(upload_folder):
-            file_path = os.path.join(upload_folder, filename)
-            if os.path.isfile(file_path):
-                os.remove(file_path)
-                print(f"Deleted {file_path}")
-
-def main():
-    if DB_URL:
-        engine = sqlalchemy.create_engine(DB_URL, connect_args={"check_same_thread": False})
-    else:
-        engine = sqlalchemy.create_engine(f"sqlite:///{SQLITE_PATH}", connect_args={"check_same_thread": False})
-
-    SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-    session = SessionLocal()
-
-    # Delete all data from Product, UploadedImage, Product-Category relationship
     try:
-        # For SQLAlchemy - assuming UploadedImage is used, otherwise skip
-        if UploadedImage in Base._decl_class_registry.values():
-            session.query(UploadedImage).delete()
-        session.query(Product).delete()
-        # If there is a relationship/join table, remove it as well (usually ProductCategory, but adjust as needed)
-        if 'product_category' in Base.metadata.tables:
-            session.execute('DELETE FROM product_category')
-        session.commit()
-        print("Deleted all products and images from the database.")
-    except Exception as e:
-        session.rollback()
-        print(f"Failed to clear database: {e}")
-    finally:
-        session.close()
+        # Connect to the SQLite database
+        conn = sqlite3.connect(DB_PATH)
+        cursor = conn.cursor()
 
-    # Remove uploaded images manually from folder
-    remove_all_images_from_folder(IMAGE_UPLOAD_FOLDER)
-    print("Purge completed.")
+        # Get image filenames before deletion (if the table exists)
+        cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='products';")
+        if not cursor.fetchone():
+            print("No products table found. Skipping database product purge.")
+        else:
+            try:
+                cursor.execute("SELECT image_url FROM products;")
+                # Fetch image URLs (previously: image_urls = ...)
+                cursor.fetchall()  # Just fetch without assignment to avoid unused var
+            except Exception:
+                pass  # Ignore if select fails
+
+            cursor.execute("DELETE FROM products;")
+            conn.commit()
+            print("All products have been deleted from the database.")
+
+        conn.close()
+    except Exception as e:
+        print(f"Failed to delete products: {e}")
+
+def delete_all_images():
+    """
+    Delete all image files from the uploaded_images directory.
+    """
+    if not os.path.exists(IMAGES_DIR):
+        print(f"No images directory found at {IMAGES_DIR}. Nothing to do.")
+        return
+
+    image_files = os.listdir(IMAGES_DIR)
+    removed_count = 0
+    for filename in image_files:
+        filepath = os.path.join(IMAGES_DIR, filename)
+        try:
+            if os.path.isfile(filepath):
+                os.remove(filepath)
+                removed_count += 1
+        except Exception as e:
+            print(f"Could not delete {filepath}: {e}")
+    print(f"Deleted {removed_count} images from {IMAGES_DIR}.")
+
+def purge():
+    """
+    PUBLIC_INTERFACE
+    Purge all product entries and images from the backend.
+    """
+    print("Purging all products from the database...")
+    delete_all_products()
+    print("Purging all images from storage...")
+    delete_all_images()
+    print("Purge completed successfully.")
 
 if __name__ == "__main__":
-    # ORM Base setup
-    try:
-        from sports_gear_backend.src.models import Base
-    except ImportError:
-        print("Error: Could not import ORM Base from models. Please check the models.py for Base declaration.")
-        exit(1)
-    main()
+    purge()
