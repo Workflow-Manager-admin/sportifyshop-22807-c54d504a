@@ -1,7 +1,7 @@
 /home/kavia/workspace/code-generation/sportifyshop-22807-c54d504a/sports_gear_backend/venv/lib/python3.12/site-packages/pydantic/_internal/_config.py:373: UserWarning: Valid config keys have changed in V2:
 * 'orm_mode' has been renamed to 'from_attributes'
   warnings.warn(message, UserWarning)
-INFO:     Started server process [46245]
+INFO:     Started server process [46704]
 INFO:     Waiting for application startup.
 Startup DB initialization failed: cannot import name 'seed_categories_and_products' from 'src.api.seed_data' (/home/kavia/workspace/code-generation/sportifyshop-22807-c54d504a/sports_gear_backend/src/api/seed_data.py) Traceback (most recent call last):
   File "/home/kavia/workspace/code-generation/sportifyshop-22807-c54d504a/sports_gear_backend/src/api/main.py", line 84, in startup_event
@@ -10,3 +10,13 @@ ImportError: cannot import name 'seed_categories_and_products' from 'src.api.see
 
 INFO:     Application startup complete.
 INFO:     Uvicorn running on http://0.0.0.0:3001 (Press CTRL+C to quit)
+INFO:     100.64.4.167:49954 - "GET /categories HTTP/1.1" 200 OK
+INFO:     100.64.4.167:49946 - "GET /products HTTP/1.1" 200 OK
+INFO:     100.64.4.167:49966 - "GET /categories HTTP/1.1" 200 OK
+INFO:     100.64.4.167:49968 - "GET /products HTTP/1.1" 200 OK
+INFO:     100.64.4.167:49984 - "GET /categories HTTP/1.1" 200 OK
+INFO:     100.64.4.167:49986 - "GET /products HTTP/1.1" 200 OK
+INFO:     100.64.4.167:50002 - "GET /categories HTTP/1.1" 200 OK
+INFO:     100.64.4.167:50012 - "GET /products HTTP/1.1" 200 OK
+INFO:     100.64.4.167:50024 - "GET /products?category=1 HTTP/1.1" 200 OK
+INFO:     100.64.4.167:50028 - "GET /products?category=3 HTTP/1.1" 200 OK
