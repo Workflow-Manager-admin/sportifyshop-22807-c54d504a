@@ -51,3 +51,18 @@ uvicorn sports_gear_backend.main:app --host 0.0.0.0 --port 8000
 For production, consider using a process manager (gunicorn + uvicorn worker, systemd, supervisord, etc).
 
 ----
+
+## Seeding the Product Catalog for Development
+
+To populate the catalog with example data for shirts, trousers, and watches, you can run the following scripts from the `sports_gear_backend` directory:
+
+```bash
+python seed_shirts.py
+python seed_trousers.py
+python seed_watches.py
+```
+
+- Each script will insert 10 example products of the respective category into your local development database.
+- Ensure the database is accessible before running these scripts.
+
+----
