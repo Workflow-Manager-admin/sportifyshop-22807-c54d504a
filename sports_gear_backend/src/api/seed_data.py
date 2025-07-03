@@ -239,6 +239,13 @@ PRODUCTS = [
 
 
 def seed_categories_and_products(db: Session):
+    """
+    Seeds the sports gear categories and products with real image URLs, INR prices, and appropriate sizes/categories,
+    only if they do not already exist. Makes data available to the /products endpoint in real time.
+
+    Args:
+        db (Session): SQLAlchemy database session.
+    """
     # Insert categories if missing
     for c in CATEGORIES:
         category = db.query(models.ProductCategory).filter_by(name=c['name']).first()
@@ -248,17 +255,14 @@ def seed_categories_and_products(db: Session):
             db.commit()
     db.commit()
 
-    # Insert products if missing
+    # Insert products if missing (avoid duplication)
     for item in PRODUCTS:
-        # Get category object
         category = db.query(models.ProductCategory).filter_by(name=item['category_name']).first()
         if not category:
             continue
-        # Check if product already exists for this name
         prod = db.query(models.Product).filter_by(name=item['name'], category_id=category.id).first()
         if prod:
             continue
-        # Insert product
         prod = models.Product(
             name=item['name'],
             description=item['description'],
