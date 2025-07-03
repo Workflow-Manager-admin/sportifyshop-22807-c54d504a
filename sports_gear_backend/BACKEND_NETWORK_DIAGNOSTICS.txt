@@ -1,0 +1,132 @@
+# FastAPI Backend Network Accessibility Troubleshooting Guide
+
+This guide helps diagnose and resolve issues preventing the backend from being accessed from another device on your LAN/network.
+
+---
+
+## 1. Confirm the Backend is Running
+
+- Check the terminal where you started the backend (via `bash run_backend.sh` or `uvicorn main:app --reload --host 0.0.0.0 --port 8000`).
+- Should display:  
+  `Application startup complete.`  
+  And should say **"Uvicorn running on http://0.0.0.0:8000"**.
+
+---
+
+## 2. Test Local Access
+
+- **From the same machine running the backend** (open a terminal or browser):
+  - Visit [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
+  - Or run:
+    ```bash
+    curl http://127.0.0.1:8000/docs
+    curl http://0.0.0.0:8000/docs
+    ```
+  - If you see a response (or the OpenAPI docs page), the server is running locally.
+
+---
+
+## 3. Check the Listening Address
+
+- The backend **must** be started with the option `--host 0.0.0.0` (not the default `127.0.0.1`), or it will not accept external/LAN connections!
+- If in doubt, **always use**:
+  ```bash
+  bash run_backend.sh
+  ```
+- If you ran manually with `uvicorn`, make sure you specified `--host 0.0.0.0`.
+
+---
+
+## 4. Confirm Port 8000 is LISTENING on 0.0.0.0
+
+- On the **backend server**, run:
+    ```bash
+    bash network_debug_check.sh
+    ```
+- Or, run manually any of:
+    ```bash
+    ss -tulnp | grep 8000
+    netstat -tulnp | grep 8000
+    lsof -i :8000
+    ```
+
+- You should see output with `0.0.0.0:8000` or `*:8000` and a `python`, `uvicorn`, or related process.
+    - Example:  
+      `tcp LISTEN 0 128 0.0.0.0:8000 ... python3 ...`
+
+---
+
+## 5. Check Firewall Status
+
+- **On Linux**, check any firewall rules:
+    ```bash
+    sudo ufw status verbose
+    sudo firewall-cmd --list-all
+    sudo iptables -L | grep 8000
+    ```
+- If using `ufw` and port 8000 is NOT listed as "ALLOW", enable it:
+    ```bash
+    sudo ufw allow 8000/tcp
+    ```
+- To temporarily disable for testing:
+    ```bash
+    sudo ufw disable
+    ```
+- With Firewalld:
+    ```bash
+    sudo firewall-cmd --add-port=8000/tcp --permanent
+    sudo firewall-cmd --reload
+    ```
+
+---
+
+## 6. Test from ANOTHER Device
+
+- Find the backend machine's **LAN IP** (example: `192.168.1.50`):
+    ```bash
+    ip addr show
+    ```
+- On **another device on the same network**, open a browser and visit:
+    ```
+    http://<LAN-IP>:8000/docs
+    ```
+    (e.g., http://192.168.1.50:8000/docs)
+
+---
+
+## 7. If STILL Not Accessible
+
+- **Possible causes:**
+    - The backend is not running or crashed (recheck step 1/2).
+    - Not started with `--host 0.0.0.0` (recheck step 3).
+    - Port 8000 is not listening on 0.0.0.0 (recheck step 4).
+    - Firewall blocks port 8000 (step 5).
+    - Running inside Docker/VM and PORT FORWARDING is missing.
+        - Use `docker run -p 8000:8000 ...` if running in Docker.
+    - You are connected via a VPN that isolates networks.
+    - Your host's public/external IP is not properly mapped.
+- **Try (on the backend host):**
+    - Run `python backend_debug_check.py` for FastAPI service status.
+    - Run `bash network_debug_check.sh` for detailed diagnostics and post the full output for support.
+
+---
+
+## 8. OTHER NETWORK ISSUES
+
+- If you're on a VM/cloud/codespace: enable port forwarding for port 8000.
+- Check local NAT/router firewall; some LANs block intra-LAN traffic.
+
+---
+
+## 9. For Support
+
+- Provide:
+    - Output from `bash network_debug_check.sh`
+    - Output from `python backend_debug_check.py`
+    - Description of your environment (local, VM, Docker, codespace, etc.)
+    - OS and network setup details
+    - Any error messages seen
+
+---
+
+#### ⚡ Most access issues are resolved by making sure you're running with `--host 0.0.0.0` and opening port 8000 in the firewall!
