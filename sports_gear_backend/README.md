@@ -1,0 +1,53 @@
+# Backend Deployment & Nginx Setup Notes
+
+> This document provides information relevant to backend deployment and any web/reverse proxy server (e.g. nginx) problems.
+
+## Nginx 404 Troubleshooting Reference
+
+If you encounter a "404 Not Found nginx/1.29.0" error while accessing your deployed FastAPI backend, here are possible causes and resolutions:
+
+### 1. Nginx Not Forwarding Requests Properly
+Make sure nginx is configured to forward requests to the FastAPI application (via gunicorn, uvicorn, or similar). Relevant config for a typical FastAPI backend:
+
+```nginx
+server {
+    listen 80;
+    server_name mydomain.com;
+
+    location / {
+        proxy_pass http://localhost:8000;  # or the port your backend runs on
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    location /static/ {
+        alias /path/to/static/;  # static file support if needed
+    }
+}
+```
+
+### 2. Backend Not Running or Running on Wrong Port
+Verify your `main.py` backend is started and accessible on the specified port. The default for uvicorn is `8000`.
+
+### 3. Wrong Root Path (FastAPI root_path or sub-path deployments)
+If your API is deployed behind a subpath (e.g. `/api/`), you must configure FastAPI with `root_path="/api"` and match that in your nginx config.
+
+### 4. Static File/Frontend Asset Routing
+For SPAs (React), nginx should serve `index.html` for frontend routes and forward API calls to backend.
+
+### 5. File/Socket Permissions
+If using a unix socket for gunicorn/uvicorn, ensure permissions are correct.
+
+----
+
+## Example Gunicorn/Uvicorn Launch
+
+```bash
+uvicorn sports_gear_backend.main:app --host 0.0.0.0 --port 8000
+```
+
+For production, consider using a process manager (gunicorn + uvicorn worker, systemd, supervisord, etc).
+
+----

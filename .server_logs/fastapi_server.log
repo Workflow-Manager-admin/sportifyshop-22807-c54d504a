@@ -1,7 +1,7 @@
 /home/kavia/workspace/code-generation/sportifyshop-22807-c54d504a/sports_gear_backend/venv/lib/python3.12/site-packages/pydantic/_internal/_config.py:373: UserWarning: Valid config keys have changed in V2:
 * 'orm_mode' has been renamed to 'from_attributes'
   warnings.warn(message, UserWarning)
-INFO:     Started server process [51382]
+INFO:     Started server process [589]
 INFO:     Waiting for application startup.
 Startup DB initialization failed: cannot import name 'seed_categories_and_products' from 'src.api.seed_data' (/home/kavia/workspace/code-generation/sportifyshop-22807-c54d504a/sports_gear_backend/src/api/seed_data.py) Traceback (most recent call last):
   File "/home/kavia/workspace/code-generation/sportifyshop-22807-c54d504a/sports_gear_backend/src/api/main.py", line 84, in startup_event
@@ -10,19 +10,3 @@ ImportError: cannot import name 'seed_categories_and_products' from 'src.api.see
 
 INFO:     Application startup complete.
 INFO:     Uvicorn running on http://0.0.0.0:3001 (Press CTRL+C to quit)
-INFO:     100.64.4.167:35450 - "OPTIONS /products?_ts=1751534001423 HTTP/1.1" 200 OK
-INFO:     100.64.4.167:35468 - "OPTIONS /categories?_ts=1751534001092 HTTP/1.1" 200 OK
-INFO:     100.64.4.167:35424 - "OPTIONS /categories?_ts=1751534001096 HTTP/1.1" 200 OK
-INFO:     100.64.4.167:35434 - "OPTIONS /categories?_ts=1751534001423 HTTP/1.1" 200 OK
-INFO:     100.64.4.167:35456 - "OPTIONS /products?_ts=1751534001096 HTTP/1.1" 200 OK
-INFO:     100.64.4.167:35422 - "OPTIONS /categories?_ts=1751534001422 HTTP/1.1" 200 OK
-INFO:     100.64.4.167:35410 - "OPTIONS /products?_ts=1751534001093 HTTP/1.1" 200 OK
-INFO:     100.64.4.167:35466 - "OPTIONS /products?_ts=1751534001423 HTTP/1.1" 200 OK
-INFO:     100.64.4.167:35530 - "GET /categories?_ts=1751534001423 HTTP/1.1" 200 OK
-INFO:     100.64.4.167:35546 - "GET /categories?_ts=1751534001096 HTTP/1.1" 200 OK
-INFO:     100.64.4.167:35520 - "GET /categories?_ts=1751534001092 HTTP/1.1" 200 OK
-INFO:     100.64.4.167:35504 - "GET /categories?_ts=1751534001422 HTTP/1.1" 200 OK
-INFO:     100.64.4.167:35490 - "GET /products?_ts=1751534001423 HTTP/1.1" 200 OK
-INFO:     100.64.4.167:35544 - "GET /products?_ts=1751534001096 HTTP/1.1" 200 OK
-INFO:     100.64.4.167:35488 - "GET /products?_ts=1751534001093 HTTP/1.1" 200 OK
-INFO:     100.64.4.167:35558 - "GET /products?_ts=1751534001423 HTTP/1.1" 200 OK
