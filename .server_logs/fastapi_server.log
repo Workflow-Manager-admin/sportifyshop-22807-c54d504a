@@ -154,3 +154,28 @@ INFO:     100.64.4.167:44236 - "GET /products?search=shoe HTTP/1.1" 200 OK
 INFO:     100.64.4.167:44244 - "GET /products?search=shoes HTTP/1.1" 200 OK
 INFO:     100.64.4.167:53388 - "OPTIONS /auth/login HTTP/1.1" 200 OK
 INFO:     100.64.4.167:53390 - "POST /auth/login HTTP/1.1" 422 Unprocessable Entity
+INFO:     100.64.4.167:44814 - "GET /products HTTP/1.1" 200 OK
+INFO:     100.64.4.167:44798 - "GET /categories HTTP/1.1" 200 OK
+INFO:     100.64.4.167:44816 - "GET /products HTTP/1.1" 200 OK
+INFO:     100.64.4.167:44824 - "GET /categories HTTP/1.1" 200 OK
+INFO:     100.64.4.167:44832 - "GET /products HTTP/1.1" 200 OK
+INFO:     100.64.4.167:44830 - "GET /categories HTTP/1.1" 200 OK
+INFO:     100.64.4.167:44848 - "GET /products HTTP/1.1" 200 OK
+INFO:     100.64.4.167:44844 - "GET /categories HTTP/1.1" 200 OK
+INFO:     100.64.4.167:53412 - "POST /auth/login HTTP/1.1" 422 Unprocessable Entity
+INFO:     100.64.4.167:46026 - "HEAD /docs HTTP/1.1" 200 OK
+INFO:     100.64.4.167:46042 - "HEAD /docs HTTP/1.1" 200 OK
+INFO:     100.64.4.167:46056 - "GET /docs HTTP/1.1" 200 OK
+INFO:     100.64.4.167:46062 - "GET /docs HTTP/1.1" 200 OK
+INFO:     100.64.4.167:46070 - "GET /openapi.json HTTP/1.1" 200 OK
+INFO:     100.64.4.167:46086 - "GET /openapi.json HTTP/1.1" 200 OK
+INFO:     100.64.4.167:53612 - "GET /categories HTTP/1.1" 200 OK
+INFO:     100.64.4.167:53628 - "GET /products HTTP/1.1" 200 OK
+INFO:     100.64.4.167:53636 - "GET /categories HTTP/1.1" 200 OK
+INFO:     100.64.4.167:53650 - "GET /products HTTP/1.1" 200 OK
+INFO:     100.64.4.167:53660 - "GET /products HTTP/1.1" 200 OK
+INFO:     100.64.4.167:53662 - "GET /categories HTTP/1.1" 200 OK
+INFO:     100.64.4.167:53678 - "GET /products HTTP/1.1" 200 OK
+INFO:     100.64.4.167:53680 - "GET /categories HTTP/1.1" 200 OK
+INFO:     100.64.4.167:53702 - "GET /products HTTP/1.1" 200 OK
+INFO:     100.64.4.167:53708 - "GET /products HTTP/1.1" 200 OK
