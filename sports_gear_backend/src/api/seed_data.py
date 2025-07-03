@@ -95,10 +95,10 @@ def seed_categories_and_products(db: Session):
     # 10 Shoes (Brand, style, price, sizes)
     for i in range(10):
         demo_products.append({
-            "name": f"RunMax Sprint {i+1} Shoes",
+            "name": f"RunMax Sprint {i + 1} Shoes",
             "description": (
                 f"Performance running shoe, breathable mesh with anti-slip rubber. "
-                f"Comfort and durability for long runs. Style {i+1}."
+                f"Comfort and durability for long runs. Style {i + 1}."
             ),
             "image_url": shoes_images[i],
             "price": 69.99 + i * 6.75,
@@ -108,13 +108,15 @@ def seed_categories_and_products(db: Session):
 
     # 10 Shirts (poly/cotton, summer, dry-fit, crewneck, v-neck)
     for i in range(10):
-        shirt_type = ["Crewneck Tee", "V-neck Tee", "Sleeveless Tank", "Performance Polo", "Compression Shirt",
-                      "Cotton Tee", "Seamless Tee", "Jersey", "Base Layer", "Raglan Tee"][i]
+        shirt_type = [
+            "Crewneck Tee", "V-neck Tee", "Sleeveless Tank", "Performance Polo", "Compression Shirt",
+            "Cotton Tee", "Seamless Tee", "Jersey", "Base Layer", "Raglan Tee"
+        ][i]
         demo_products.append({
-            "name": f"ActiveFlex {shirt_type} {i+1}",
+            "name": f"ActiveFlex {shirt_type} {i + 1}",
             "description": (
                 f"Lightweight, moisture-wicking sports shirt ({shirt_type}) for training and outdoor use. "
-                f"Odor/fade-resistant, four-way stretch. Style {i+1}."
+                f"Odor/fade-resistant, four-way stretch. Style {i + 1}."
             ),
             "image_url": shirts_images[i],
             "price": 22.50 + i * 3.10,
@@ -124,13 +126,15 @@ def seed_categories_and_products(db: Session):
 
     # 10 Trousers (shorts, leggings, joggers, stretch)
     for i in range(10):
-        trouser_type = ["Track Pants", "Training Shorts", "Compression Leggings", "Joggers", "Cargo Shorts",
-                        "Slim Fit Pants", "Sport Capris", "Thermal Pants", "Summer Shorts", "Stretch Trousers"][i]
+        trouser_type = [
+            "Track Pants", "Training Shorts", "Compression Leggings", "Joggers", "Cargo Shorts",
+            "Slim Fit Pants", "Sport Capris", "Thermal Pants", "Summer Shorts", "Stretch Trousers"
+        ][i]
         demo_products.append({
-            "name": f"MovePro {trouser_type} {i+1}",
+            "name": f"MovePro {trouser_type} {i + 1}",
             "description": (
                 f"Flexible {trouser_type} for versatile sports activities. "
-                f"Breathable fabric with adjustable waist. Style {i+1}."
+                f"Breathable fabric with adjustable waist. Style {i + 1}."
             ),
             "image_url": trousers_images[i],
             "price": 27.99 + i * 2.40,
@@ -140,13 +144,15 @@ def seed_categories_and_products(db: Session):
 
     # 10 Watches (sport, GPS, digital, waterproof)
     for i in range(10):
-        watch_type = ["Digital Chrono", "Fitness Tracker", "Smartwatch", "Running GPS Watch", "Waterproof Sport Watch",
-                      "Classic Analog", "Digital Fitness", "Multisport Watch", "Pulse Watch", "Activity Smartwatch"][i]
+        watch_type = [
+            "Digital Chrono", "Fitness Tracker", "Smartwatch", "Running GPS Watch", "Waterproof Sport Watch",
+            "Classic Analog", "Digital Fitness", "Multisport Watch", "Pulse Watch", "Activity Smartwatch"
+        ][i]
         demo_products.append({
-            "name": f"PulseSync {watch_type} {i+1}",
+            "name": f"PulseSync {watch_type} {i + 1}",
             "description": (
                 f"Reliable sports watch: features {watch_type.lower()}, durable, splash resistant. "
-                f"Stay on track with workout metrics or timekeeping. Style {i+1}."
+                f"Stay on track with workout metrics or timekeeping. Style {i + 1}."
             ),
             "image_url": watches_images[i],
             "price": 55.00 + i * 10.75,
