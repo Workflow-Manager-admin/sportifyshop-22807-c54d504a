@@ -261,7 +261,19 @@ def seed_categories_and_products(db: Session):
         if not category:
             continue
         prod = db.query(models.Product).filter_by(name=item['name'], category_id=category.id).first()
+        # Correction: If product exists but image_url is missing or altered, or not a valid public url, update it.
         if prod:
+            # Check for valid http(s) image_url, update if existing is empty or not starting with http
+            correct_url = item['image_url']
+            update_needed = False
+            if not prod.image_url or not (prod.image_url.startswith("http://") or prod.image_url.startswith("https://")):
+                update_needed = True
+            elif correct_url and prod.image_url != correct_url:
+                update_needed = True
+            if update_needed:
+                prod.image_url = correct_url
+                db.add(prod)
+                db.commit()
             continue
         prod = models.Product(
             name=item['name'],
