@@ -1,21 +1,14 @@
 """
 Seed data for sports gear backend: Only seed 4 categories - Shirt, Trouser, Watches, and Shoes,
-with 10 products each. Each product will have a unique name, INR price, realistic size where applicable,
-and a valid public product image URL.
+with 10 products each. Before seeding, REMOVES all other categories and products.
 """
 
 from sqlalchemy.orm import Session
 from . import models
 
-# Category definitions
-CATEGORIES = [
-    {"name": "Shirt"},
-    {"name": "Trouser"},
-    {"name": "Watches"},
-    {"name": "Shoes"},
-]
+# Categories to keep/seed
+CATEGORIES_TO_KEEP = ["Shirt", "Trouser", "Watches", "Shoes"]
 
-# Static image URLs (public/free images, but should be replaced by admin in production)
 PRODUCT_IMAGES = {
     "Shirt": [
         "https://images.unsplash.com/photo-1512436991641-6745cdb1723f",
@@ -67,7 +60,6 @@ PRODUCT_IMAGES = {
     ],
 }
 
-# Product details for each category
 PRODUCTS = {
     "Shirt": [
         {
@@ -101,24 +93,48 @@ PRODUCTS = {
 
 # PUBLIC_INTERFACE
 def seed_data(db: Session):
-    """Seed only specified 4 categories with 10 products each; removes all others."""
-    # Clear old products and categories first
-    db.query(models.Product).delete()
-    db.query(models.Category).delete()
+    """
+    Seed only specified 4 categories with 10 products each.
+    Before inserting, remove all categories and products except those specified.
+    After operation, confirm only specified items remain.
+    """
+    # Step 1: Delete all products and categories NOT in CATEGORIES_TO_KEEP
+    kept_categories = db.query(models.Category).filter(models.Category.name.in_(CATEGORIES_TO_KEEP)).all()
+    kept_category_ids = [cat.id for cat in kept_categories]
+
+    # Delete products NOT in kept categories
+    if kept_category_ids:
+        db.query(models.Product).filter(~models.Product.category_id.in_(kept_category_ids)).delete(synchronize_session=False)
+    else:
+        db.query(models.Product).delete()
     db.commit()
 
-    # Create categories and products
-    for category in CATEGORIES:
-        cat = models.ProductCategory(name=category["name"])
-        db.add(cat)
+    # Delete categories not in keep-list
+    db.query(models.Category).filter(~models.Category.name.in_(CATEGORIES_TO_KEEP)).delete(synchronize_session=False)
+    db.commit()
+
+    # Step 2: Ensure only the specified categories exist
+    categories_by_name = {}
+    for category_name in CATEGORIES_TO_KEEP:
+        category = db.query(models.Category).filter_by(name=category_name).first()
+        if not category:
+            category = models.Category(name=category_name)
+            db.add(category)
+            db.commit()
+            db.refresh(category)
+        categories_by_name[category_name] = category
+
+    # Step 3: For each category, remove any excess products and ensure 10 exist with correct data
+    for category_name, cat_obj in categories_by_name.items():
+        # Remove all products for this category (clean slate)
+        db.query(models.Product).filter_by(category_id=cat_obj.id).delete(synchronize_session=False)
         db.commit()
-        db.refresh(cat)
 
-        products = PRODUCTS[category["name"]]
-        img_urls = PRODUCT_IMAGES[category["name"]]
+        products = PRODUCTS[category_name]
+        img_urls = PRODUCT_IMAGES[category_name]
 
-        for i, prod in enumerate(products):
-            # available_sizes is a string like "S,M,L,XL" or None
+        for i in range(10):
+            prod = products[i]
             avail_sizes = None
             size_val = prod.get("size", None)
             if size_val:
@@ -132,7 +148,17 @@ def seed_data(db: Session):
                 price=prod["price"],
                 available_sizes=avail_sizes,
                 image_url=img_urls[i],
-                category_id=cat.id,
+                category_id=cat_obj.id,
             )
             db.add(db_product)
         db.commit()
+
+    # Final assertion: ONLY the required categories/products remain
+    remaining_categories = db.query(models.Category).all()
+    assert set(cat.name for cat in remaining_categories) == set(CATEGORIES_TO_KEEP), \
+        "Only required categories must remain"
+    for category_name in CATEGORIES_TO_KEEP:
+        cat = db.query(models.Category).filter_by(name=category_name).first()
+        count = db.query(models.Product).filter_by(category_id=cat.id).count()
+        assert count == 10, f"Category {category_name} should have exactly 10 products"
+
