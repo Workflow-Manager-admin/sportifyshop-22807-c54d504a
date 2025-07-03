@@ -176,11 +176,29 @@ class ProductOut(BaseModel):
     description: Optional[str]
     image_url: Optional[str]  # May be an absolute URL (external) or backend-served static path ("/static/images/...").
     price: float
-    available_sizes: Optional[str]
-    category: Optional[ProductCategoryOut]
+    sizes: Optional[list] = []
+    category_name: Optional[str] = None
 
     class Config:
         orm_mode = True
+
+    @staticmethod
+    def from_orm_flat(prod):
+        # Extract flat fields for frontend
+        sizes = (
+            [s.strip() for s in prod.available_sizes.split(",") if s.strip()]
+            if getattr(prod, "available_sizes", None) else []
+        )
+        cat_name = prod.category.name if getattr(prod, "category", None) else None
+        return ProductOut(
+            id=prod.id,
+            name=prod.name,
+            description=prod.description,
+            image_url=prod.image_url,
+            price=prod.price,
+            sizes=sizes,
+            category_name=cat_name,
+        )
 
 class CartItemCreate(BaseModel):
     product_id: int
@@ -467,7 +485,18 @@ def list_products(
         query = query.filter(models.Product.category_id == category_id)
     if size:
         query = query.filter(models.Product.available_sizes.contains(size))
-    return query.all()
+    prods = query.all()
+    # Flatten and normalize product output format for frontend deduplication and compatibility.
+    seen = set()
+    result = []
+    for prod in prods:
+        obj = ProductOut.from_orm_flat(prod)
+        # Use tuple (name, category_name) as uniqueness key (id must already be unique, this is just extra safe)
+        key = (obj.id, obj.name, obj.category_name)
+        if key not in seen:
+            seen.add(key)
+            result.append(obj)
+    return result
 
 # PUBLIC_INTERFACE
 @app.get("/products/{product_id}", response_model=ProductOut, tags=["catalog"], summary="Get product details")
