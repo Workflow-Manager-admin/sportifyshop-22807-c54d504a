@@ -109,7 +109,7 @@ def seed_data(db: Session):
 
     # Create categories and products
     for category in CATEGORIES:
-        cat = models.Category(name=category["name"])
+        cat = models.ProductCategory(name=category["name"])
         db.add(cat)
         db.commit()
         db.refresh(cat)
@@ -118,10 +118,19 @@ def seed_data(db: Session):
         img_urls = PRODUCT_IMAGES[category["name"]]
 
         for i, prod in enumerate(products):
+            # available_sizes is a string like "S,M,L,XL" or None
+            avail_sizes = None
+            size_val = prod.get("size", None)
+            if size_val:
+                if isinstance(size_val, list):
+                    avail_sizes = ','.join([str(s) for s in size_val])
+                elif isinstance(size_val, str):
+                    avail_sizes = size_val
+
             db_product = models.Product(
                 name=prod["name"],
                 price=prod["price"],
-                size=prod["size"],
+                available_sizes=avail_sizes,
                 image_url=img_urls[i],
                 category_id=cat.id,
             )

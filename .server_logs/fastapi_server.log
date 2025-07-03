@@ -1,39 +1,32 @@
 /home/kavia/workspace/code-generation/sportifyshop-22807-c54d504a/sports_gear_backend/venv/lib/python3.12/site-packages/pydantic/_internal/_config.py:373: UserWarning: Valid config keys have changed in V2:
 * 'orm_mode' has been renamed to 'from_attributes'
   warnings.warn(message, UserWarning)
-INFO:     Started server process [43907]
+INFO:     Started server process [45496]
 INFO:     Waiting for application startup.
+Startup DB initialization failed: cannot import name 'seed_categories_and_products' from 'src.api.seed_data' (/home/kavia/workspace/code-generation/sportifyshop-22807-c54d504a/sports_gear_backend/src/api/seed_data.py) Traceback (most recent call last):
+  File "/home/kavia/workspace/code-generation/sportifyshop-22807-c54d504a/sports_gear_backend/src/api/main.py", line 84, in startup_event
+    from .seed_data import seed_categories_and_products
+ImportError: cannot import name 'seed_categories_and_products' from 'src.api.seed_data' (/home/kavia/workspace/code-generation/sportifyshop-22807-c54d504a/sports_gear_backend/src/api/seed_data.py)
+
 INFO:     Application startup complete.
 INFO:     Uvicorn running on http://0.0.0.0:3001 (Press CTRL+C to quit)
-INFO:     100.64.4.167:37790 - "OPTIONS /categories HTTP/1.1" 200 OK
-INFO:     100.64.4.167:37814 - "OPTIONS /categories HTTP/1.1" 200 OK
-INFO:     100.64.4.167:37798 - "OPTIONS /categories HTTP/1.1" 200 OK
-INFO:     100.64.4.167:37796 - "OPTIONS /products HTTP/1.1" 200 OK
-INFO:     100.64.4.167:37846 - "OPTIONS /products HTTP/1.1" 200 OK
-INFO:     100.64.4.167:37832 - "OPTIONS /products HTTP/1.1" 200 OK
-INFO:     100.64.4.167:37852 - "OPTIONS /products HTTP/1.1" 200 OK
-INFO:     100.64.4.167:37824 - "OPTIONS /categories HTTP/1.1" 200 OK
-INFO:     100.64.4.167:37866 - "GET /categories HTTP/1.1" 200 OK
-INFO:     100.64.4.167:37872 - "GET /products HTTP/1.1" 200 OK
-INFO:     100.64.4.167:37886 - "GET /categories HTTP/1.1" 200 OK
-INFO:     100.64.4.167:37892 - "GET /categories HTTP/1.1" 200 OK
-INFO:     100.64.4.167:37888 - "GET /products HTTP/1.1" 200 OK
-INFO:     100.64.4.167:37898 - "GET /categories HTTP/1.1" 200 OK
-INFO:     100.64.4.167:37908 - "GET /products HTTP/1.1" 200 OK
-INFO:     100.64.4.167:37916 - "GET /products HTTP/1.1" 200 OK
-INFO:     100.64.4.167:37924 - "GET /products HTTP/1.1" 200 OK
-INFO:     100.64.4.167:37936 - "OPTIONS /products?category=1 HTTP/1.1" 200 OK
-INFO:     100.64.4.167:37942 - "GET /products?category=1 HTTP/1.1" 200 OK
-INFO:     100.64.4.167:44190 - "OPTIONS /products?category=3 HTTP/1.1" 200 OK
-INFO:     100.64.4.167:44204 - "GET /products?category=3 HTTP/1.1" 200 OK
-INFO:     100.64.4.167:43956 - "GET /categories HTTP/1.1" 200 OK
-INFO:     100.64.4.167:43972 - "GET /products HTTP/1.1" 200 OK
-INFO:     100.64.4.167:43988 - "GET /categories HTTP/1.1" 200 OK
-INFO:     100.64.4.167:44002 - "GET /products HTTP/1.1" 200 OK
-INFO:     100.64.4.167:44006 - "GET /categories HTTP/1.1" 200 OK
-INFO:     100.64.4.167:44022 - "GET /products HTTP/1.1" 200 OK
-INFO:     100.64.4.167:44032 - "GET /categories HTTP/1.1" 200 OK
-INFO:     100.64.4.167:44044 - "GET /products HTTP/1.1" 200 OK
-INFO:     100.64.4.167:49364 - "GET /products?category=1 HTTP/1.1" 200 OK
-INFO:     100.64.4.167:49374 - "OPTIONS /products?category=2 HTTP/1.1" 200 OK
-INFO:     100.64.4.167:49376 - "GET /products?category=2 HTTP/1.1" 200 OK
+INFO:     100.64.4.167:54438 - "GET /categories HTTP/1.1" 200 OK
+INFO:     100.64.4.167:54424 - "GET /products HTTP/1.1" 200 OK
+INFO:     100.64.4.167:54448 - "GET /categories HTTP/1.1" 200 OK
+INFO:     100.64.4.167:54456 - "GET /products HTTP/1.1" 200 OK
+INFO:     100.64.4.167:54468 - "GET /categories HTTP/1.1" 200 OK
+INFO:     100.64.4.167:54480 - "GET /products HTTP/1.1" 200 OK
+INFO:     100.64.4.167:54484 - "GET /categories HTTP/1.1" 200 OK
+INFO:     100.64.4.167:54498 - "GET /products HTTP/1.1" 200 OK
+INFO:     100.64.4.167:55922 - "GET /categories HTTP/1.1" 200 OK
+INFO:     100.64.4.167:55926 - "GET /products HTTP/1.1" 200 OK
+INFO:     100.64.4.167:55936 - "GET /categories HTTP/1.1" 200 OK
+INFO:     100.64.4.167:55946 - "GET /products HTTP/1.1" 200 OK
+INFO:     100.64.4.167:55958 - "GET /categories HTTP/1.1" 200 OK
+INFO:     100.64.4.167:55972 - "GET /products HTTP/1.1" 200 OK
+INFO:     100.64.4.167:55988 - "GET /categories HTTP/1.1" 200 OK
+INFO:     100.64.4.167:55994 - "GET /products HTTP/1.1" 200 OK
+INFO:     100.64.4.167:56002 - "GET /categories HTTP/1.1" 200 OK
+INFO:     100.64.4.167:56008 - "GET /products HTTP/1.1" 200 OK
+INFO:     100.64.4.167:56022 - "GET /categories HTTP/1.1" 200 OK
+INFO:     100.64.4.167:56032 - "GET /products HTTP/1.1" 200 OK
