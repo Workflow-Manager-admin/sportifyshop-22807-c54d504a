@@ -1,135 +1,101 @@
 """
-Seed categories and demo products for the sports gear backend database.
+Seed categories and sports gear products for the backend database.
 
-- Adds a handful of product categories (if not present).
-- Adds demo products to each category.
-- Idempotent: safe to call multiple times.
+- Removes all old products before seeding.
+- Ensures categories exist.
+- Adds 10 shirts, 10 trousers, 10 watches, and 10 shoes (with images/prices).
 """
 
 from sqlalchemy.orm import Session
+from sqlalchemy import text
 from .models import ProductCategory, Product
 
 # PUBLIC_INTERFACE
 def seed_categories_and_products(db: Session):
     """
-    Seed demo categories and products for sports gear. Idempotent for initial setup.
-
-    Args:
-        db (Session): SQLAlchemy database session.
-
-    Seeds:
-        - Shoes, Shirts, Trousers, Watches
-        - Example products in each category (if not already present)
+    PUBLIC_INTERFACE
+    Remove all old products and seed 10 shirts, 10 trousers, 10 watches, and 10 shoes
+    with images and prices. Ensures required product categories exist.
     """
-    # ---- Categories ---- #
-    categories = [
+    # ---- Categories - ensure present ---- #
+    categories_data = [
         {"name": "Shoes", "description": "Running, training, sports shoes"},
         {"name": "Shirts", "description": "Sport and exercise shirts"},
         {"name": "Trousers", "description": "Sport pants, leggings, shorts"},
         {"name": "Watches", "description": "Sport watches, fitness trackers"},
     ]
-    for cat in categories:
+    categories = {}
+    for cat in categories_data:
         existing = db.query(ProductCategory).filter_by(name=cat["name"]).first()
         if not existing:
-            db.add(ProductCategory(name=cat["name"], description=cat["description"]))
+            existing = ProductCategory(name=cat["name"], description=cat["description"])
+            db.add(existing)
+            db.commit()
+            db.refresh(existing)
+        categories[cat["name"]] = existing
+
+    # ---- Products: remove ALL old, then seed exactly 10 of each required type ---- #
+    db.execute(text("DELETE FROM product;"))  # hard reset
     db.commit()
 
-    # ---- Demo Products ---- #
-    demo_products = [
-        {
-            "name": "Adidas Ultraboost",
-            "description": "Lightweight training shoe.",
-            "image_url": "/static/images/adidas_ultraboost.jpg",
-            "price": 120.0,
+    demo_products = []
+    # 10 Shoes
+    for i in range(1, 11):
+        demo_products.append({
+            "name": f"Sport Shoe Model {i}",
+            "description": f"High Performance Running Shoe Model {i}",
+            "image_url": f"https://img.example.com/shoe{i}.jpg",
+            "price": 70 + i * 3,  # Vary price a little
             "available_sizes": "7,8,9,10,11",
-            "category_name": "Shoes",
-        },
-        {
-            "name": "Nike Pegasus",
-            "description": "Standard running shoe.",
-            "image_url": "/static/images/nike_pegasus.jpg",
-            "price": 110.0,
-            "available_sizes": "7,8,9,10,11",
-            "category_name": "Shoes",
-        },
-        {
-            "name": "Under Armour Assert",
-            "description": "Supportive and cushioned.",
-            "image_url": "/static/images/ua_assert.jpg",
-            "price": 90.0,
-            "available_sizes": "8,9,10,11,12",
-            "category_name": "Shoes",
-        },
-        {
-            "name": "Reebok Nano",
-            "description": "Versatile cross-trainer.",
-            "image_url": "/static/images/reebok_nano.jpg",
-            "price": 100.0,
-            "available_sizes": "7,8,9,10",
-            "category_name": "Shoes",
-        },
-        {
-            "name": "Brooks Ghost",
-            "description": "Soft and balanced running.",
-            "image_url": "/static/images/brooks_ghost.jpg",
-            "price": 130.0,
-            "available_sizes": "9,10,11",
-            "category_name": "Shoes",
-        },
-        {
-            "name": "Saucony Ride 14",
-            "description": "Cushioned everyday running.",
-            "image_url": "/static/images/saucony_ride14.jpg",
-            "price": 125.0,
-            "available_sizes": "7,8.5,9.5,10.5",
-            "category_name": "Shoes",
-        },
-        {
-            "name": "NB Foam 1080",
-            "description": "Premium comfort.",
-            "image_url": "/static/images/nb_foam_1080.jpg",
-            "price": 135.0,
-            "available_sizes": "8,9,10",
-            "category_name": "Shoes",
-        },
-        {
-            "name": "Mizuno Wave Rider",
-            "description": "Stable ride.",
-            "image_url": "/static/images/mizuno_waverider.jpg",
-            "price": 120.0,
-            "available_sizes": "7,9,11",
-            "category_name": "Shoes",
-        },
-        # Add Shirts
-        {
-            "name": "ASICS Kayano Tee",
-            "description": "Breathable running shirt.",
-            "image_url": "/static/images/asics_kayano.jpg",
-            "price": 35.0,
+            "category_name": "Shoes"
+        })
+    # 10 Shirts
+    for i in range(1, 11):
+        demo_products.append({
+            "name": f"Sports Shirt {i}",
+            "description": f"Breathable Sports Shirt Style {i}",
+            "image_url": f"https://img.example.com/shirt{i}.jpg",
+            "price": 20 + i * 2.5,
             "available_sizes": "S,M,L,XL",
             "category_name": "Shirts",
-        },
-        {
-            "name": "Puma Flyer Tee",
-            "description": "Moisture-wicking workout shirt.",
-            "image_url": "/static/images/puma_flyer.jpg",
-            "price": 28.0,
-            "available_sizes": "S,M,L",
-            "category_name": "Shirts",
-        }
-    ]
+        })
+    # 10 Trousers
+    for i in range(1, 11):
+        demo_products.append({
+            "name": f"Sport Trouser {i}",
+            "description": f"Flexible sports trousers #{i} for all activities.",
+            "image_url": f"https://img.example.com/trouser{i}.jpg",
+            "price": 30 + i * 1.8,
+            "available_sizes": "S,M,L,XL",
+            "category_name": "Trousers"
+        })
+    # 10 Watches
+    for i in range(1, 11):
+        demo_products.append({
+            "name": f"Sports Watch {i}",
+            "description": f"Durable water resistant sports watch model {i}.",
+            "image_url": f"https://img.example.com/watch{i}.jpg",
+            "price": 50 + i * 9.5,
+            "available_sizes": "One Size",
+            "category_name": "Watches"
+        })
+
     for prod in demo_products:
-        category = db.query(ProductCategory).filter_by(name=prod["category_name"]).first()
-        if not category:
-            continue  # Defensive: skip if category missing
-        exists = db.query(Product).filter_by(name=prod["name"], category_id=category.id).first()
-        if not exists:
-            db.add(Product(
-                name=prod["name"],
-                description=prod["description"],
-                image_url=prod["image_url"],
-                price=prod["price"],
-                available_sizes=prod["available_sizes"],
-                category_id=category.id
-            ))
+        category = categories[prod["category_name"]]
+        db.add(Product(
+            name=prod["name"],
+            description=prod["description"],
+            image_url=prod["image_url"],
+            price=prod["price"],
+            available_sizes=prod["available_sizes"],
+            category_id=category.id
+        ))
     db.commit()
+    print("Removed old products and seeded 10 each: shoes, shirts, trousers, watches.")
+
+if __name__ == "__main__":
+    from sqlalchemy.orm import sessionmaker
+    from .models import engine
+    SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+    db = SessionLocal()
+    seed_categories_and_products(db)
