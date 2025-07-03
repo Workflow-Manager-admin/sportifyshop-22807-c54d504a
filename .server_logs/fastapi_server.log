@@ -1,76 +1,47 @@
 /home/kavia/workspace/code-generation/sportifyshop-22807-c54d504a/sports_gear_backend/venv/lib/python3.12/site-packages/pydantic/_internal/_config.py:373: UserWarning: Valid config keys have changed in V2:
 * 'orm_mode' has been renamed to 'from_attributes'
   warnings.warn(message, UserWarning)
-INFO:     Started server process [22145]
+INFO:     Started server process [22781]
 INFO:     Waiting for application startup.
-Startup DB initialization failed: (sqlite3.OperationalError) no such table: product
-[SQL: DELETE FROM product;]
-(Background on this error at: https://sqlalche.me/e/20/e3q8) Traceback (most recent call last):
-  File "/home/kavia/workspace/code-generation/sportifyshop-22807-c54d504a/sports_gear_backend/venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1963, in _exec_single_context
-    self.dialect.do_execute(
-  File "/home/kavia/workspace/code-generation/sportifyshop-22807-c54d504a/sports_gear_backend/venv/lib/python3.12/site-packages/sqlalchemy/engine/default.py", line 943, in do_execute
-    cursor.execute(statement, parameters)
-sqlite3.OperationalError: no such table: product
-
-The above exception was the direct cause of the following exception:
-
-Traceback (most recent call last):
-  File "/home/kavia/workspace/code-generation/sportifyshop-22807-c54d504a/sports_gear_backend/src/api/main.py", line 88, in startup_event
-    seed_categories_and_products(db)
-  File "/home/kavia/workspace/code-generation/sportifyshop-22807-c54d504a/sports_gear_backend/src/api/seed_data.py", line 53, in seed_categories_and_products
-    db.execute(text("DELETE FROM product;"))  # hard reset
-    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/kavia/workspace/code-generation/sportifyshop-22807-c54d504a/sports_gear_backend/venv/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 2365, in execute
-    return self._execute_internal(
-           ^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/kavia/workspace/code-generation/sportifyshop-22807-c54d504a/sports_gear_backend/venv/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 2260, in _execute_internal
-    result = conn.execute(
-             ^^^^^^^^^^^^^
-  File "/home/kavia/workspace/code-generation/sportifyshop-22807-c54d504a/sports_gear_backend/venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1415, in execute
-    return meth(
-           ^^^^^
-  File "/home/kavia/workspace/code-generation/sportifyshop-22807-c54d504a/sports_gear_backend/venv/lib/python3.12/site-packages/sqlalchemy/sql/elements.py", line 523, in _execute_on_connection
-    return connection._execute_clauseelement(
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/kavia/workspace/code-generation/sportifyshop-22807-c54d504a/sports_gear_backend/venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1637, in _execute_clauseelement
-    ret = self._execute_context(
-          ^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/kavia/workspace/code-generation/sportifyshop-22807-c54d504a/sports_gear_backend/venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1842, in _execute_context
-    return self._exec_single_context(
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/kavia/workspace/code-generation/sportifyshop-22807-c54d504a/sports_gear_backend/venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1982, in _exec_single_context
-    self._handle_dbapi_exception(
-  File "/home/kavia/workspace/code-generation/sportifyshop-22807-c54d504a/sports_gear_backend/venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 2351, in _handle_dbapi_exception
-    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
-  File "/home/kavia/workspace/code-generation/sportifyshop-22807-c54d504a/sports_gear_backend/venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1963, in _exec_single_context
-    self.dialect.do_execute(
-  File "/home/kavia/workspace/code-generation/sportifyshop-22807-c54d504a/sports_gear_backend/venv/lib/python3.12/site-packages/sqlalchemy/engine/default.py", line 943, in do_execute
-    cursor.execute(statement, parameters)
-sqlalchemy.exc.OperationalError: (sqlite3.OperationalError) no such table: product
-[SQL: DELETE FROM product;]
-(Background on this error at: https://sqlalche.me/e/20/e3q8)
-
+Removed old products and seeded 10 each: shoes, shirts, trousers, watches.
 INFO:     Application startup complete.
 INFO:     Uvicorn running on http://0.0.0.0:3001 (Press CTRL+C to quit)
-INFO:     100.64.4.167:57888 - "OPTIONS /categories?_ts=1751539747898 HTTP/1.1" 200 OK
-INFO:     100.64.4.167:57904 - "OPTIONS /products?_ts=1751539747899 HTTP/1.1" 200 OK
-INFO:     100.64.4.167:57906 - "OPTIONS /categories?_ts=1751539747903 HTTP/1.1" 200 OK
-INFO:     100.64.4.167:57908 - "OPTIONS /products?_ts=1751539747903 HTTP/1.1" 200 OK
-INFO:     100.64.4.167:57912 - "GET /categories?_ts=1751539747898 HTTP/1.1" 200 OK
-INFO:     100.64.4.167:57926 - "GET /categories?_ts=1751539747903 HTTP/1.1" 200 OK
-INFO:     100.64.4.167:57916 - "GET /products?_ts=1751539747899 HTTP/1.1" 200 OK
-INFO:     100.64.4.167:57938 - "GET /products?_ts=1751539747903 HTTP/1.1" 200 OK
-INFO:     100.64.4.167:57948 - "OPTIONS /categories?_ts=1751539748310 HTTP/1.1" 200 OK
-INFO:     100.64.4.167:57968 - "OPTIONS /categories?_ts=1751539748311 HTTP/1.1" 200 OK
-INFO:     100.64.4.167:57952 - "OPTIONS /products?_ts=1751539748311 HTTP/1.1" 200 OK
-INFO:     100.64.4.167:57984 - "OPTIONS /products?_ts=1751539748311 HTTP/1.1" 200 OK
-INFO:     100.64.4.167:57990 - "OPTIONS /products?_ts=1751539748462 HTTP/1.1" 200 OK
-INFO:     100.64.4.167:58006 - "OPTIONS /products?_ts=1751539748484 HTTP/1.1" 200 OK
-INFO:     100.64.4.167:58012 - "GET /categories?_ts=1751539748310 HTTP/1.1" 200 OK
-INFO:     100.64.4.167:58014 - "GET /categories?_ts=1751539748311 HTTP/1.1" 200 OK
-INFO:     100.64.4.167:58016 - "GET /products?_ts=1751539748311 HTTP/1.1" 200 OK
-INFO:     100.64.4.167:58022 - "GET /products?_ts=1751539748484 HTTP/1.1" 200 OK
-INFO:     100.64.4.167:58020 - "GET /products?_ts=1751539748462 HTTP/1.1" 200 OK
-INFO:     100.64.4.167:58028 - "GET /products?_ts=1751539748311 HTTP/1.1" 200 OK
-INFO:     100.64.4.167:58030 - "OPTIONS /products?_ts=1751539749158 HTTP/1.1" 200 OK
-INFO:     100.64.4.167:58036 - "GET /products?_ts=1751539749158 HTTP/1.1" 200 OK
+INFO:     100.64.4.167:52370 - "OPTIONS /categories?_ts=1751539816000 HTTP/1.1" 200 OK
+INFO:     100.64.4.167:52372 - "OPTIONS /products?_ts=1751539816001 HTTP/1.1" 200 OK
+INFO:     100.64.4.167:52382 - "OPTIONS /categories?_ts=1751539816005 HTTP/1.1" 200 OK
+INFO:     100.64.4.167:52390 - "OPTIONS /products?_ts=1751539816006 HTTP/1.1" 200 OK
+INFO:     100.64.4.167:52402 - "OPTIONS /categories?_ts=1751539816318 HTTP/1.1" 200 OK
+INFO:     100.64.4.167:52410 - "OPTIONS /products?_ts=1751539816318 HTTP/1.1" 200 OK
+INFO:     100.64.4.167:52442 - "OPTIONS /products?_ts=1751539816319 HTTP/1.1" 200 OK
+INFO:     100.64.4.167:52426 - "OPTIONS /categories?_ts=1751539816319 HTTP/1.1" 200 OK
+INFO:     100.64.4.167:52472 - "GET /categories?_ts=1751539816319 HTTP/1.1" 200 OK
+INFO:     100.64.4.167:52508 - "GET /categories?_ts=1751539816005 HTTP/1.1" 200 OK
+INFO:     100.64.4.167:52520 - "GET /categories?_ts=1751539816318 HTTP/1.1" 200 OK
+INFO:     100.64.4.167:52452 - "GET /categories?_ts=1751539816000 HTTP/1.1" 200 OK
+INFO:     100.64.4.167:52482 - "GET /products?_ts=1751539816318 HTTP/1.1" 200 OK
+INFO:     100.64.4.167:52498 - "GET /products?_ts=1751539816001 HTTP/1.1" 200 OK
+INFO:     100.64.4.167:52494 - "GET /products?_ts=1751539816319 HTTP/1.1" 200 OK
+INFO:     100.64.4.167:52456 - "GET /products?_ts=1751539816006 HTTP/1.1" 200 OK
+INFO:     100.64.4.167:52530 - "OPTIONS /products?_ts=1751539817159 HTTP/1.1" 200 OK
+INFO:     100.64.4.167:52532 - "OPTIONS /products?_ts=1751539817190 HTTP/1.1" 200 OK
+INFO:     100.64.4.167:52548 - "OPTIONS /products?_ts=1751539817338 HTTP/1.1" 200 OK
+INFO:     100.64.4.167:52560 - "GET /products?_ts=1751539817159 HTTP/1.1" 200 OK
+INFO:     100.64.4.167:52566 - "GET /products?_ts=1751539817190 HTTP/1.1" 200 OK
+INFO:     100.64.4.167:52580 - "GET /products?_ts=1751539817338 HTTP/1.1" 200 OK
+INFO:     100.64.4.167:53902 - "OPTIONS /products?_ts=1751539827078 HTTP/1.1" 200 OK
+INFO:     100.64.4.167:53908 - "GET /products?_ts=1751539827078 HTTP/1.1" 200 OK
+INFO:     100.64.4.167:53912 - "OPTIONS /products?_ts=1751539829458 HTTP/1.1" 200 OK
+INFO:     100.64.4.167:53916 - "GET /products?_ts=1751539829458 HTTP/1.1" 200 OK
+INFO:     100.64.4.167:40962 - "OPTIONS /products?_ts=1751539831549 HTTP/1.1" 200 OK
+INFO:     100.64.4.167:40974 - "GET /products?_ts=1751539831549 HTTP/1.1" 200 OK
+INFO:     100.64.4.167:40986 - "OPTIONS /products?_ts=1751539833341 HTTP/1.1" 200 OK
+INFO:     100.64.4.167:40988 - "GET /products?_ts=1751539833341 HTTP/1.1" 200 OK
+INFO:     100.64.4.167:40992 - "OPTIONS /products?_ts=1751539834173 HTTP/1.1" 200 OK
+INFO:     100.64.4.167:41008 - "GET /products?_ts=1751539834173 HTTP/1.1" 200 OK
+INFO:     100.64.4.167:35876 - "OPTIONS /products/1?_ts=1751539846658 HTTP/1.1" 200 OK
+INFO:     100.64.4.167:35880 - "OPTIONS /products/1?_ts=1751539846659 HTTP/1.1" 200 OK
+INFO:     100.64.4.167:35896 - "GET /products/1?_ts=1751539846658 HTTP/1.1" 200 OK
+INFO:     100.64.4.167:35906 - "GET /products/1?_ts=1751539846659 HTTP/1.1" 200 OK
+INFO:     100.64.4.167:41870 - "POST /auth/login HTTP/1.1" 422 Unprocessable Entity
+INFO:     100.64.4.167:41876 - "POST /auth/login HTTP/1.1" 422 Unprocessable Entity
+INFO:     100.64.4.167:39960 - "POST /auth/login HTTP/1.1" 422 Unprocessable Entity
