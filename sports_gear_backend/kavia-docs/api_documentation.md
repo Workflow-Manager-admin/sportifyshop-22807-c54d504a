@@ -1,13 +1,13 @@
-# Sports Gear Ecommerce API Documentation
+# ManStyle Hub Backend API Documentation
 
-This document provides the up-to-date REST API documentation for the **Sports Gear Ecommerce Backend**.
+This document provides up-to-date REST API documentation for the **ManStyle Hub Ecommerce Backend**.
 
 - **Backend platform**: FastAPI
 - **Location**: `sports_gear_backend`
 - **OpenAPI/Swagger UI**: [http://localhost:8000/docs](http://localhost:8000/docs)
 - **OpenAPI JSON**: [http://localhost:8000/openapi.json](http://localhost:8000/openapi.json)
 
-> **Note:** The endpoints listed here were extracted from the implemented backend codebase. Example request/response structures are adapted from the actual Pydantic models used.
+> **Note:** The endpoints listed here were extracted from the current backend codebase for ManStyle Hub. Example request/response structures are adapted from the actual Pydantic models used.
 
 ---
 

@@ -40,15 +40,15 @@ stripe.api_key = STRIPE_KEY
 
 ### ========= FASTAPI APP INSTANCE ========= ###
 app = FastAPI(
-    title="Sports Gear Ecommerce Backend",
-    description="Backend for Sports Gear online shop. Handles users, products, carts, orders.",
-    version="0.2.0",
+    title="ManStyle Hub Backend",
+    description="Backend for ManStyle Hub, an online shop for men's apparel & accessories. Handles users, wardrobe products, carts, and orders.",
+    version="1.0.0",
     openapi_tags=[
         {"name": "health", "description": "Health and diagnostics"},
         {"name": "db", "description": "Database health"},
         {"name": "users", "description": "User management"},
         {"name": "auth", "description": "User authentication"},
-        {"name": "catalog", "description": "Product catalog"},
+        {"name": "catalog", "description": "Apparel & Accessories Catalog"},
         {"name": "cart", "description": "Shopping cart"},
         {"name": "orders", "description": "Order management"},
         {"name": "profile", "description": "User profile"},

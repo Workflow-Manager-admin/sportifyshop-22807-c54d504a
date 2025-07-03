@@ -1,4 +1,4 @@
-# sportifyshop-22807-c54d504a
+# manstyle-hub-backend
 
 ---
 🚩 **IMPORTANT: For Docker, VM, Codespaces, or Cloud IDEs, ALWAYS use `--host 0.0.0.0` when running the backend, or use the provided `run_backend.sh` script!**
