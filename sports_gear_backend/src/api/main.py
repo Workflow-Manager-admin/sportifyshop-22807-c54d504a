@@ -749,6 +749,35 @@ def admin_add_or_update_category(cat: CategoryCreate, db: Session = Depends(get_
     db.refresh(category)
     return category
 
+# PUBLIC_INTERFACE
+@app.post(
+    "/ensure-main-categories",
+    response_model=List[ProductCategoryOut],
+    tags=["catalog"],
+    summary="Ensure required categories (shirt, trouser, shoes, watches)",
+    description="Ensures that the four main sports gear categories (Shirts, Trousers, Shoes, Watches) exist in the database, creates them if missing, and returns all current categories.",
+)
+def ensure_main_categories(db: Session = Depends(get_db)):
+    """
+    Ensures that the required categories ('Shirts', 'Trousers', 'Shoes', 'Watches') exist in the database.
+    Idempotent: only creates categories if missing. Returns list of all current categories after update.
+    """
+    main_categories = [
+        {"name": "Shirts", "description": "Sport and exercise shirts"},
+        {"name": "Trousers", "description": "Sport pants, leggings, shorts"},
+        {"name": "Shoes", "description": "Running, training, sports shoes"},
+        {"name": "Watches", "description": "Sport watches, fitness trackers"},
+    ]
+    # Check for each, create if not present
+    for cat in main_categories:
+        existing = db.query(models.ProductCategory).filter_by(name=cat["name"]).first()
+        if not existing:
+            new_cat = models.ProductCategory(name=cat["name"], description=cat["description"])
+            db.add(new_cat)
+    db.commit()
+    # Return up-to-date categories list
+    return db.query(models.ProductCategory).all()
+
 @app.post("/admin/product",
           response_model=ProductOut,
           tags=["catalog"],
