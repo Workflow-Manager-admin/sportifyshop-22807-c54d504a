@@ -1,7 +1,7 @@
 /home/kavia/workspace/code-generation/sportifyshop-22807-c54d504a/sports_gear_backend/venv/lib/python3.12/site-packages/pydantic/_internal/_config.py:373: UserWarning: Valid config keys have changed in V2:
 * 'orm_mode' has been renamed to 'from_attributes'
   warnings.warn(message, UserWarning)
-INFO:     Started server process [29430]
+INFO:     Started server process [30674]
 INFO:     Waiting for application startup.
 (trapped) error reading bcrypt version
 Traceback (most recent call last):
@@ -12,9 +12,48 @@ AttributeError: module 'bcrypt' has no attribute '__about__'
 Removed old products and seeded 10 each: shoes, shirts, trousers, watches.
 INFO:     Application startup complete.
 INFO:     Uvicorn running on http://0.0.0.0:3001 (Press CTRL+C to quit)
-INFO:     100.64.4.167:39746 - "HEAD /docs HTTP/1.1" 200 OK
-INFO:     100.64.4.167:39756 - "HEAD /docs HTTP/1.1" 200 OK
-INFO:     100.64.4.167:39762 - "GET /docs HTTP/1.1" 200 OK
-INFO:     100.64.4.167:39770 - "GET /docs HTTP/1.1" 200 OK
-INFO:     100.64.4.167:39772 - "GET /openapi.json HTTP/1.1" 200 OK
-INFO:     100.64.4.167:55326 - "GET /openapi.json HTTP/1.1" 200 OK
+INFO:     100.64.4.167:34568 - "GET /docs HTTP/1.1" 200 OK
+INFO:     100.64.4.167:34576 - "HEAD /docs HTTP/1.1" 200 OK
+INFO:     100.64.4.167:34582 - "HEAD /docs HTTP/1.1" 200 OK
+INFO:     100.64.4.167:34584 - "GET /docs HTTP/1.1" 200 OK
+INFO:     100.64.4.167:34600 - "GET /docs HTTP/1.1" 200 OK
+INFO:     100.64.4.167:34604 - "GET /openapi.json HTTP/1.1" 200 OK
+INFO:     100.64.4.167:34616 - "GET /openapi.json HTTP/1.1" 200 OK
+INFO:     100.64.4.167:34632 - "OPTIONS /categories?_ts=1751540789450 HTTP/1.1" 200 OK
+INFO:     100.64.4.167:34646 - "OPTIONS /products?_ts=1751540789450 HTTP/1.1" 200 OK
+INFO:     100.64.4.167:34652 - "OPTIONS /categories?_ts=1751540789453 HTTP/1.1" 200 OK
+INFO:     100.64.4.167:34662 - "OPTIONS /products?_ts=1751540789454 HTTP/1.1" 200 OK
+INFO:     100.64.4.167:34670 - "GET /categories?_ts=1751540789450 HTTP/1.1" 200 OK
+INFO:     100.64.4.167:34682 - "GET /products?_ts=1751540789450 HTTP/1.1" 200 OK
+INFO:     100.64.4.167:34706 - "GET /categories?_ts=1751540789453 HTTP/1.1" 200 OK
+INFO:     100.64.4.167:34696 - "GET /products?_ts=1751540789454 HTTP/1.1" 200 OK
+INFO:     100.64.4.167:34722 - "OPTIONS /categories?_ts=1751540789751 HTTP/1.1" 200 OK
+INFO:     100.64.4.167:34728 - "OPTIONS /products?_ts=1751540789752 HTTP/1.1" 200 OK
+INFO:     100.64.4.167:34734 - "OPTIONS /products?_ts=1751540789752 HTTP/1.1" 200 OK
+INFO:     100.64.4.167:34730 - "OPTIONS /categories?_ts=1751540789752 HTTP/1.1" 200 OK
+INFO:     100.64.4.167:34742 - "OPTIONS /products?_ts=1751540789978 HTTP/1.1" 200 OK
+INFO:     100.64.4.167:34750 - "GET /categories?_ts=1751540789751 HTTP/1.1" 200 OK
+INFO:     100.64.4.167:34768 - "GET /categories?_ts=1751540789752 HTTP/1.1" 200 OK
+INFO:     100.64.4.167:34756 - "GET /products?_ts=1751540789752 HTTP/1.1" 200 OK
+INFO:     100.64.4.167:34780 - "OPTIONS /products?_ts=1751540790021 HTTP/1.1" 200 OK
+INFO:     100.64.4.167:34792 - "GET /products?_ts=1751540789978 HTTP/1.1" 200 OK
+INFO:     100.64.4.167:34802 - "OPTIONS /products?_ts=1751540790268 HTTP/1.1" 200 OK
+INFO:     100.64.4.167:34816 - "GET /products?_ts=1751540790021 HTTP/1.1" 200 OK
+INFO:     100.64.4.167:34818 - "GET /products?_ts=1751540789752 HTTP/1.1" 200 OK
+INFO:     100.64.4.167:34838 - "OPTIONS /products?_ts=1751540790352 HTTP/1.1" 200 OK
+INFO:     100.64.4.167:34854 - "GET /products?_ts=1751540790268 HTTP/1.1" 200 OK
+INFO:     100.64.4.167:34864 - "GET /products?_ts=1751540790352 HTTP/1.1" 200 OK
+INFO:     100.64.4.167:37478 - "OPTIONS /products/1?_ts=1751540792732 HTTP/1.1" 200 OK
+INFO:     100.64.4.167:37492 - "OPTIONS /products/1?_ts=1751540792732 HTTP/1.1" 200 OK
+INFO:     100.64.4.167:37498 - "GET /products/1?_ts=1751540792732 HTTP/1.1" 200 OK
+INFO:     100.64.4.167:37502 - "GET /products/1?_ts=1751540792732 HTTP/1.1" 200 OK
+INFO:     100.64.4.167:49034 - "POST /auth/login HTTP/1.1" 422 Unprocessable Entity
+INFO:     100.64.4.167:49042 - "POST /auth/login HTTP/1.1" 422 Unprocessable Entity
+INFO:     100.64.4.167:39546 - "POST /auth/login HTTP/1.1" 422 Unprocessable Entity
+INFO:     100.64.4.167:57958 - "GET /docs HTTP/1.1" 200 OK
+INFO:     100.64.4.167:57974 - "HEAD /docs HTTP/1.1" 200 OK
+INFO:     100.64.4.167:57984 - "HEAD /docs HTTP/1.1" 200 OK
+INFO:     100.64.4.167:57994 - "GET /docs HTTP/1.1" 200 OK
+INFO:     100.64.4.167:58004 - "GET /docs HTTP/1.1" 200 OK
+INFO:     100.64.4.167:58020 - "GET /openapi.json HTTP/1.1" 200 OK
+INFO:     100.64.4.167:58032 - "GET /openapi.json HTTP/1.1" 200 OK
