@@ -41,14 +41,14 @@ Uses SQLite DB (`sports_gear.db` by default, override with `SQLITE_DB_FILENAME` 
      ```
      uvicorn src.api.main:app --reload
      ```
-     OR (if you want to ensure `src` always imports cleanly regardless of CWD):
+     OR (to ensure `src` always imports cleanly regardless of CWD):
      ```
      uvicorn main:app --reload
      ```
      This uses `main.py` which sets up Python path for `src` imports.
 
    - **From project root**  
-     If running from project root (`sportifyshop-22807-c54d504a/`), you can:
+     If running from project root (`sportifyshop-22807-c54d504a/`), you should:
      ```
      cd sports_gear_backend
      uvicorn main:app --reload
@@ -60,6 +60,40 @@ Uses SQLite DB (`sports_gear.db` by default, override with `SQLITE_DB_FILENAME` 
      is **not supported** unless the Python path is configured explicitly.
 
 3. API Docs: [http://localhost:8000/docs](http://localhost:8000/docs)
+
+---
+
+#### 🚩 Trouble accessing on http://127.0.0.1:8000/docs but backend says "running"?
+If you start uvicorn and see "Application startup complete" but the docs page is unreachable:
+
+- **Check port and host binding:** By default, `uvicorn` binds to 127.0.0.1 (localhost). If you're in a container, Docker, VM, or cloud IDE, use:
+  ```
+  uvicorn main:app --reload --host 0.0.0.0
+  ```
+  (Or add `--host 0.0.0.0` to any uvicorn command.)  
+  This lets all network interfaces access the API (required for remote/browser access in Docker/cloud).
+
+- **If running inside Docker or a remote dev environment or codespace:**  
+  Access via the exposed/public URL, not "localhost", unless port forwarding is set up.
+
+- **Port conflicts:** Make sure port 8000 isn't used by another app. Change with `--port 8001` etc, if needed.
+
+- **Firewall/security group:** Ensure inbound connections to port 8000 are allowed (rarely needed for local-only).
+
+- **Wrong working directory:** Always `cd sports_gear_backend` before starting uvicorn `main:app`.
+
+- **Check that FastAPI started successfully:** If uvicorn crashes or logs import errors, confirm Python path and dependencies.
+
+- **In cloud/dev containers:**  
+  Your backend is usually available on an external/public URL shown by your dev environment (not http://127.0.0.1:8000). For example, see your codespace or cloud IDE's port-forwarded address.
+
+**For local development (all OS):**
+```
+uvicorn main:app --reload --host 0.0.0.0
+```
+- Visit http://localhost:8000/docs or use the forwarded/public address from your environment.
+
+---
 
 #### Common error: "No module named 'src'"
 - This occurs if you run `uvicorn` from a directory where the `src` module is not on `PYTHONPATH`.
