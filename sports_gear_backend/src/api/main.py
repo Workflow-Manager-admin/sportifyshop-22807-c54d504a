@@ -213,8 +213,9 @@ def db_health_check(db: Session = Depends(get_db)):
     Returns: {"db_health": "ok"} if DB is connected and can be queried.
     Returns HTTP 503 if not available.
     """
+    from sqlalchemy import text  # Import text for raw SQL execution
     try:
-        db.execute("SELECT 1")
+        db.execute(text("SELECT 1"))  # Use text() to wrap the raw SQL
         return {"db_health": "ok"}
     except Exception as exc:
         return JSONResponse(
