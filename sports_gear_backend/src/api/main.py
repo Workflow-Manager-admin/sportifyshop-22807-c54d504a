@@ -3,7 +3,6 @@ from typing import List, Optional
 from fastapi import FastAPI, Depends, HTTPException, status, Body, Path, Query, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
-from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field, EmailStr
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError
@@ -11,6 +10,7 @@ from passlib.context import CryptContext
 import jwt
 from datetime import datetime, timedelta
 import stripe
+from sqlalchemy import text
 
 from . import models
 
@@ -206,20 +206,47 @@ def health_check():
     return {"message": "Healthy"}
 
 # PUBLIC_INTERFACE
-@app.get("/db/health", tags=["db"], summary="Database health check", response_model=dict)
+@app.get(
+    "/db/health",
+    tags=["db"],
+    summary="Database health check",
+    response_model=dict,
+    responses={
+        200: {
+            "description": "Successfully connected to the database.",
+            "content": {
+                "application/json": {"example": {"db_health": "ok"}}
+            },
+        },
+        503: {
+            "description": "Database is unavailable or cannot be reached.",
+            "content": {
+                "application/json": {
+                    "example": {
+                        "db_health": "unavailable",
+                        "detail": "Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')",
+                    }
+                }
+            },
+        },
+    },
+)
 def db_health_check(db: Session = Depends(get_db)):
     """
-    Checks connectivity to the database.
-    Returns: {"db_health": "ok"} if DB is connected and can be queried.
-    Returns HTTP 503 if not available.
+    PUBLIC_INTERFACE: Checks connectivity to the database.
+
+    Returns:
+        200: {"db_health": "ok"} if DB is connected and can be queried.
+        503: {"db_health": "unavailable", "detail": "..."} if not available.
     """
     try:
-        db.execute("SELECT 1")
+        db.execute(text("SELECT 1"))
         return {"db_health": "ok"}
     except Exception as exc:
-        return JSONResponse(
+        # Use HTTPException to allow OpenAPI docs to show response model
+        raise HTTPException(
             status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-            content={"db_health": "unavailable", "detail": str(exc)},
+            detail={"db_health": "unavailable", "detail": str(exc)},
         )
 
 # ------------------ AUTH & USER MANAGEMENT -------------------
