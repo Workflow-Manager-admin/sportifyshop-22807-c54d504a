@@ -39,6 +39,20 @@ For SPAs (React), nginx should serve `index.html` for frontend routes and forwar
 
 ### 5. File/Socket Permissions
 If using a unix socket for gunicorn/uvicorn, ensure permissions are correct.
+----
+## Default Admin/Test User for Login
+
+- On database seeding, the following admin user is always present:
+    - **Email:** admin@example.com
+    - **Password:** admin123
+
+If you have trouble logging in as admin, run the following from the backend root to forcibly reseed and reset the admin credentials:
+
+```bash
+python -m sports_gear_backend.src.api.seed_data
+```
+
+The backend will always set the admin user to the password above during seed (for development/troubleshooting).
 
 ----
 
@@ -49,6 +63,20 @@ uvicorn sports_gear_backend.main:app --host 0.0.0.0 --port 8000
 ```
 
 For production, consider using a process manager (gunicorn + uvicorn worker, systemd, supervisord, etc).
+----
+## Default Admin/Test User for Login
+
+- On database seeding, the following admin user is always present:
+    - **Email:** admin@example.com
+    - **Password:** admin123
+
+If you have trouble logging in as admin, run the following from the backend root to forcibly reseed and reset the admin credentials:
+
+```bash
+python -m sports_gear_backend.src.api.seed_data
+```
+
+The backend will always set the admin user to the password above during seed (for development/troubleshooting).
 
 ----
 
@@ -64,5 +92,19 @@ python seed_watches.py
 
 - Each script will insert 10 example products of the respective category into your local development database.
 - Ensure the database is accessible before running these scripts.
+----
+## Default Admin/Test User for Login
+
+- On database seeding, the following admin user is always present:
+    - **Email:** admin@example.com
+    - **Password:** admin123
+
+If you have trouble logging in as admin, run the following from the backend root to forcibly reseed and reset the admin credentials:
+
+```bash
+python -m sports_gear_backend.src.api.seed_data
+```
+
+The backend will always set the admin user to the password above during seed (for development/troubleshooting).
 
 ----

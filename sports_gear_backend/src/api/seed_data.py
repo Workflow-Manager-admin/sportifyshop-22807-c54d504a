@@ -25,12 +25,17 @@ def seed_categories_and_products(db: Session):
     admin_email = "admin@example.com"
     admin_password = "admin123"
     existing_admin = db.query(User).filter_by(email=admin_email).first()
+    hashed = get_password_hash(admin_password)
     if not existing_admin:
-        hashed = get_password_hash(admin_password)
         admin_user = User(email=admin_email, hashed_password=hashed, full_name="Admin User")
         db.add(admin_user)
         db.commit()
         db.refresh(admin_user)
+    else:
+        # Always set password to known value for admin during seeding for debug/test reliability
+        existing_admin.hashed_password = hashed
+        db.add(existing_admin)
+        db.commit()
 
     # ---- Categories - ensure present ---- #
     categories_data = [
