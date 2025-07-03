@@ -308,13 +308,21 @@ async def upload_product_image(
     """
     PUBLIC_INTERFACE: Upload a product image to the backend and receive a static URL.
 
-    - Accepts a multipart/form-data POST with a file (png, jpg, jpeg, gif).
-    - Stores the image in the backend's static directory.
-    - Returns an accessible image URL to use as product.image_url.
-    - External image links may also be used for products (not uploaded).
+    Use this endpoint to upload an image file for a new product or to update an existing product image.
+
+    How to use:
+      1. POST your file to this endpoint.
+      2. The response will contain an "image_url" field, e.g. "/static/images/abc123.png".
+      3. Use this URL as the 'image_url' when creating or updating a product.
+      4. Images are accessible at:  GET /static/images/{filename}
+
+    Notes:
+      - External image links (http/https URLs) are also supported for products.
+      - This endpoint is for backend-hosted product images (so they display even if external CDN is not stable).
+      - Uploaded files are stored in the backend's static directory.
 
     Returns:
-        200: { "image_url": "/static/images/fname.png" }
+        200: { "image_url": "/static/images/abc123.png" }
     """
 
     allowed_exts = {".jpg", ".jpeg", ".png", ".gif"}
@@ -697,8 +705,45 @@ def admin_add_category(cat: CategoryCreate, db: Session = Depends(get_db)):
     db.refresh(category)
     return category
 
-@app.post("/admin/product", response_model=ProductOut, tags=["catalog"], include_in_schema=False)
+@app.post("/admin/product",
+          response_model=ProductOut,
+          tags=["catalog"],
+          summary="Add new product (admin)",
+          responses={
+              200: {
+                  "description": "Product created and returned.",
+                  "model": ProductOut,
+              },
+              400: {
+                  "description": "Invalid product data.",
+                  "content": {"application/json": {"example": {"detail": "Invalid image_url"}}}
+              }
+          },
+          )
 def admin_add_product(product: ProductCreate, db: Session = Depends(get_db)):
+    """
+    PUBLIC_INTERFACE: Admin product creation (internal API).
+
+    - The 'image_url' field may be:
+        - A public external URL (http/https),
+        - OR a static path returned from /products/upload-image (e.g., /static/images/filename.png).
+    - If using the backend upload-image endpoint, POST the image first, receive a URL, then use that URL here.
+    - Backend will not validate if the image exists at provided URL; it is up to the admin/frontend to upload if local.
+
+    Returns:
+      - ProductOut object on success.
+      - 400 if image_url is not external or not a valid static path.
+    """
+    # Validation: image_url is either HTTP(S) or begins with "/static/images/"
+    if product.image_url:
+        if (
+            not (product.image_url.startswith("http://") or product.image_url.startswith("https://"))
+            and not product.image_url.startswith("/static/images/")
+        ):
+            raise HTTPException(
+                status_code=400,
+                detail="image_url must be an HTTP(S) URL or a static backend-served URL beginning with /static/images/"
+            )
     prod = models.Product(**product.dict())
     db.add(prod)
     db.commit()
