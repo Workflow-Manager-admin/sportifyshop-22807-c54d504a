@@ -40,7 +40,7 @@ PRODUCTS = [
     {
         "name": "Adidas Predator Edge Football Boots",
         "description": "Durable turf shoes for pitch control.",
-        "image_url": "https://upload.wikimedia.org/wikipedia/commons/8/85/Adidas_Predator_Shoe_2016.jpg",
+        "image_url": "https://assets.adidas.com/images/w_600,f_auto,q_auto/87669b74e07244b9bef5ae5501238a3d_9366/Predator_Edge_4_Firm_Ground_Boots_Black_GW0972_01_standard.jpg",
         "price": 3299,
         "available_sizes": "UK6,UK7,UK8,UK9,UK10",
         "category_name": "Shoes",
@@ -48,7 +48,7 @@ PRODUCTS = [
     {
         "name": "Puma Softride Rift Running Shoes",
         "description": "Ultra-soft sports running shoes for men.",
-        "image_url": "https://in.puma.com/media/catalog/product/3/7/377048_03_sv01.jpg",
+        "image_url": "https://images.puma.com/image/upload/f_auto,q_auto,b_rgb:fafafa,w_600,h_600/global/377048/03/sv01/fnd/IND/fmt/png/Softride-Rift-Men's-Running-Shoes",
         "price": 2999,
         "available_sizes": "UK5,UK6,UK7,UK8,UK9,UK10",
         "category_name": "Shoes",
@@ -57,7 +57,7 @@ PRODUCTS = [
     {
         "name": "Cosco Brasil Football Size-5",
         "description": "Quality football for every field.",
-        "image_url": "https://m.media-amazon.com/images/I/614O6YGFQKL._SL1500_.jpg",
+        "image_url": "https://static-01.daraz.pk/p/d65bb89ced4f09bb260101ef0ac63f1f.jpg",
         "price": 749,
         "available_sizes": "5",
         "category_name": "Balls",
@@ -65,7 +65,7 @@ PRODUCTS = [
     {
         "name": "Nivia Graffiti Basketball Size-7",
         "description": "Premium grip and bounce on all courts.",
-        "image_url": "https://nivia.in/cdn/shop/products/333_Front_2.png?v=1626256981",
+        "image_url": "https://rukminim2.flixcart.com/image/416/416/ke1pnrk0/basketball/i/b/a/7-2765graffitiorange-nivia-original-imafutkuss3uxqrv.jpeg",
         "price": 840,
         "available_sizes": "7",
         "category_name": "Balls",
@@ -74,7 +74,7 @@ PRODUCTS = [
     {
         "name": "Adidas Entrada 22 Jersey",
         "description": "Lightweight, moisture-absorbing sports jersey.",
-        "image_url": "https://assets.adidas.com/images/w_600,f_auto,q_auto/f14815b2df1c42298436afc901304f96_9366/Entrada_22_Jersey_Red_H57566_01_laydown.jpg",
+        "image_url": "https://assets.adidas.com/images/w_600,f_auto,q_auto/c9b851c802d04676a955afec0127853c_9366/Entrada_22_Jersey_White_H57564_01_laydown.jpg",
         "price": 1199,
         "available_sizes": "S,M,L,XL,XXL",
         "category_name": "Apparel",
@@ -82,7 +82,7 @@ PRODUCTS = [
     {
         "name": "Nike Dri-FIT Academy Shorts",
         "description": "Breathable mesh shorts for training comfort.",
-        "image_url": "https://static.nike.com/a/images/c_limit,w_592,f_auto/t_product_v1/afd5a1c2-8010-4c70-bea9-bd33606b6ade/challenger-2-in-1-7-running-shorts-0wJd9z.png",
+        "image_url": "https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco/33e129b9115542d5b5b7f793c8e1a58a/dri-fit-academy-mens-soccer-shorts-xsKfsT.png",
         "price": 2195,
         "available_sizes": "S,M,L,XL",
         "category_name": "Apparel",
@@ -91,7 +91,7 @@ PRODUCTS = [
     {
         "name": "HEAD Pro Tennis Racket Overgrip",
         "description": "Superior grip and sweat absorption for rackets.",
-        "image_url": "https://m.media-amazon.com/images/I/71c8mXJKKML._SL1500_.jpg",
+        "image_url": "https://www.head.com/media/catalog/product/h/e/head-pro-overgrip-white-tennis-pack-3-overgrip-281704_wh.jpg",
         "price": 545,
         "available_sizes": "Standard",
         "category_name": "Equipment",
@@ -100,7 +100,7 @@ PRODUCTS = [
     {
         "name": "Wildcraft HypaDura Bolt Backpack",
         "description": "Multi-compartment backpack for sports gear.",
-        "image_url": "https://www.wildcraft.com/media/catalog/product/cache/927c393b7777a39a877531d6b172c0be/1/1/11968_black-1.jpg",
+        "image_url": "https://wildcraftimages.s3.ap-south-1.amazonaws.com/img/bags/11968-black-2.jpg",
         "price": 2650,
         "available_sizes": "Large",
         "category_name": "Bags",
@@ -109,7 +109,7 @@ PRODUCTS = [
     {
         "name": "Yonex Nanoray 18i Badminton Racket",
         "description": "Superlight, fast head speed badminton racket.",
-        "image_url": "https://m.media-amazon.com/images/I/718ePGTGo2L._SL1500_.jpg",
+        "image_url": "https://cdn.shopify.com/s/files/1/0618/7650/7113/products/yonex-nanoray-18i-badminton-racket-1.jpg",
         "price": 2399,
         "available_sizes": "Standard",
         "category_name": "Rackets",
@@ -118,7 +118,7 @@ PRODUCTS = [
     {
         "name": "SG Cricket Batting Pads - Club",
         "description": "Lightweight, durable cricket pads.",
-        "image_url": "https://m.media-amazon.com/images/I/81OudLwTx3L._SL1500_.jpg",
+        "image_url": "https://static-01.daraz.pk/p/570ad6f01220060da2939b16c046263e.jpg",
         "price": 1399,
         "available_sizes": "Men,Youth",
         "category_name": "Protective Gear",
@@ -127,7 +127,7 @@ PRODUCTS = [
     {
         "name": "Reebok Training Water Bottle",
         "description": "Durable BPA-free water bottle with twist cap.",
-        "image_url": "https://assets.reebok.com/images/h_840,f_auto,q_auto,fl_lossy,c_fill,g_auto/c1dbb7a0913d463193b6aa94011698d3_9366/TR_BOTTLE_600_GZ8636_01_standard.jpg",
+        "image_url": "https://assets.adidas.com/images/w_600,f_auto,q_auto,fl_lossy,c_fill,g_auto/44e06e0a5c0344c3a409af920085dfa2_9366/Training_Water_Bottle_0.75_L_Blue_CF3522_01_standard.jpg",
         "price": 499,
         "available_sizes": "600ml",
         "category_name": "Accessories",
@@ -136,7 +136,7 @@ PRODUCTS = [
     {
         "name": "Strauss Anti-Skid Yoga Mat",
         "description": "Lightweight, anti-slip, roll-up yoga mat.",
-        "image_url": "https://m.media-amazon.com/images/I/71ULf9rKjxL._SL1500_.jpg",
+        "image_url": "https://5.imimg.com/data5/SELLER/Default/2023/8/337514916/KW/JT/CK/183243041/anti-skid-yoga-mat.jpg",
         "price": 799,
         "available_sizes": "6mm,8mm",
         "category_name": "Fitness",
