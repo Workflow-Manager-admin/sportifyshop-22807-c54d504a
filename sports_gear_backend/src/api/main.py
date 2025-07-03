@@ -48,7 +48,6 @@ app.add_middleware(
     allow_origins=["*"], allow_credentials=True, allow_methods=["*"], allow_headers=["*"]
 )
 
-
 ######### ========== DB DEPENDENCY ============== #########
 
 @app.on_event("startup")
@@ -106,7 +105,6 @@ def get_current_active_user(current_user: models.User = Depends(get_current_user
     return current_user
 
 # ============ Pydantic Schemas (DTOs) ============ #
-
 
 # --------- AUTH & USER ------- #
 class UserRegisterRequest(BaseModel):
@@ -311,7 +309,7 @@ def get_product(product_id: int = Path(..., gt=0), db: Session = Depends(get_db)
 def get_cart(current_user: models.User = Depends(get_current_active_user), db: Session = Depends(get_db)):
     cart = (
         db.query(models.Cart)
-        .filter(models.Cart.user_id == current_user.id, not models.Cart.checked_out)
+        .filter(models.Cart.user_id == current_user.id, models.Cart.checked_out.is_(False))
         .first()
     )
     if not cart:
@@ -327,7 +325,7 @@ def get_cart(current_user: models.User = Depends(get_current_active_user), db: S
 def add_item_to_cart(item: CartItemCreate, current_user: models.User = Depends(get_current_active_user), db: Session = Depends(get_db)):
     cart = (
         db.query(models.Cart)
-        .filter(models.Cart.user_id == current_user.id, not models.Cart.checked_out)
+        .filter(models.Cart.user_id == current_user.id, models.Cart.checked_out.is_(False))
         .first()
     )
     if not cart:
@@ -373,7 +371,7 @@ def update_cart_item(
     cart_item = db.query(models.CartItem).join(models.Cart).filter(
         models.CartItem.id == cart_item_id,
         models.Cart.user_id == current_user.id,
-        not models.Cart.checked_out
+        models.Cart.checked_out.is_(False)
     ).first()
     if not cart_item:
         raise HTTPException(status_code=404, detail="Cart item not found")
@@ -393,7 +391,7 @@ def remove_cart_item(
     cart_item = db.query(models.CartItem).join(models.Cart).filter(
         models.CartItem.id == cart_item_id,
         models.Cart.user_id == current_user.id,
-        not models.Cart.checked_out
+        models.Cart.checked_out.is_(False)
     ).first()
     if not cart_item:
         raise HTTPException(status_code=404, detail="Cart item not found")
@@ -420,7 +418,7 @@ def create_stripe_session(
     current_user: models.User = Depends(get_current_active_user),
     db: Session = Depends(get_db)
 ):
-    cart = db.query(models.Cart).filter(models.Cart.user_id == current_user.id, not models.Cart.checked_out).first()
+    cart = db.query(models.Cart).filter(models.Cart.user_id == current_user.id, models.Cart.checked_out.is_(False)).first()
     if not cart or not cart.items:
         raise HTTPException(status_code=400, detail="No items in cart")
     # Build Stripe line items
@@ -460,7 +458,7 @@ def complete_checkout(
     current_user: models.User = Depends(get_current_active_user),
     db: Session = Depends(get_db)
 ):
-    cart = db.query(models.Cart).filter(models.Cart.user_id == current_user.id, not models.Cart.checked_out).first()
+    cart = db.query(models.Cart).filter(models.Cart.user_id == current_user.id, models.Cart.checked_out.is_(False)).first()
     if not cart or not cart.items:
         raise HTTPException(status_code=400, detail="No items in cart")
     total = calc_cart_total(cart, db)
