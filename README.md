@@ -76,35 +76,49 @@ Uses SQLite DB (`sports_gear.db` by default, override with `SQLITE_DB_FILENAME` 
 
 ---
 
-#### 🚩 Trouble accessing on http://127.0.0.1:8000/docs but backend says "running"?
-If you start uvicorn and see "Application startup complete" but the docs page is unreachable:
+#### 🚩 Trouble accessing from another device? (e.g. http://192.168.70.40:8000/docs or LAN IP)
 
-- **Check port and host binding:** By default, `uvicorn` binds to 127.0.0.1 (localhost). If you're in a container, Docker, VM, or cloud IDE, use:
-  ```
-  uvicorn main:app --reload --host 0.0.0.0
-  ```
-  (Or add `--host 0.0.0.0` to any uvicorn command.)  
-  This lets all network interfaces access the API (required for remote/browser access in Docker/cloud).
+If you start uvicorn (or run_backend.sh) and see "Application startup complete" but the docs page is unreachable from other devices on your LAN:
 
-- **If running inside Docker or a remote dev environment or codespace:**  
-  Access via the exposed/public URL, not "localhost", unless port forwarding is set up.
+**Advanced network diagnostics:**  
+1. Make sure you are running with `--host 0.0.0.0` (see above).
+2. Run the built-in debug scripts:
+   - For backend service health:  
+     ```
+     python backend_debug_check.py
+     ```
+   - For network troubleshooting & firewall:
+     ```
+     bash network_debug_check.sh
+     ```
+     This will print info about which interface(s) are listening, if the firewall/iptables is blocking, process usage, and LAN interface status.
+3. **If port 8000 is NOT listening on 0.0.0.0 OR not accessible:**
+   - Check if your OS firewall is blocking access (see the output for iptables/ufw status).
+   - Temporarily disable firewall for a test (Linux):  
+     ```
+     sudo ufw disable
+     ```
+     or open only that port:
+     ```
+     sudo ufw allow 8000/tcp
+     ```
+   - For firewalld:
+     ```
+     sudo firewall-cmd --add-port=8000/tcp --permanent && sudo firewall-cmd --reload
+     ```
+   - If you are in Docker or a VM, ensure proper port mapping/forwarding (`docker run -p 8000:8000 ...` or similar).
+   - Check your PC's network configuration (are you on a VPN? On the correct interface?).
+   - Try accessing `curl http://127.0.0.1:8000` and `curl http://0.0.0.0:8000` on the backend machine itself, and also from another device (use your machine's LAN IP such as `http://192.168.70.40:8000`).
+4. If unable to solve, copy the full output of both debug scripts to your support request – include any error or port conflicts reported.
 
-- **Port conflicts:** Make sure port 8000 isn't used by another app. Change with `--port 8001` etc, if needed.
-
-- **Firewall/security group:** Ensure inbound connections to port 8000 are allowed (rarely needed for local-only).
-
-- **Wrong working directory:** Always `cd sports_gear_backend` before starting uvicorn `main:app`.
-
-- **Check that FastAPI started successfully:** If uvicorn crashes or logs import errors, confirm Python path and dependencies.
-
-- **In cloud/dev containers:**  
-  Your backend is usually available on an external/public URL shown by your dev environment (not http://127.0.0.1:8000). For example, see your codespace or cloud IDE's port-forwarded address.
+---
 
 **For local development (all OS):**
 ```
 uvicorn main:app --reload --host 0.0.0.0
 ```
-- Visit http://localhost:8000/docs or use the forwarded/public address from your environment.
+- Visit http://localhost:8000/docs from the *same machine*.
+- Visit http://<YOUR_LOCAL_IP>:8000/docs (e.g., http://192.168.70.40:8000/docs) from another device *on your LAN*, after confirming firewall/network access.
 
 ---
 
