@@ -20,3 +20,14 @@ INFO:     100.64.4.167:50002 - "GET /categories HTTP/1.1" 200 OK
 INFO:     100.64.4.167:50012 - "GET /products HTTP/1.1" 200 OK
 INFO:     100.64.4.167:50024 - "GET /products?category=1 HTTP/1.1" 200 OK
 INFO:     100.64.4.167:50028 - "GET /products?category=3 HTTP/1.1" 200 OK
+INFO:     100.64.4.167:54438 - "GET /categories HTTP/1.1" 200 OK
+INFO:     100.64.4.167:54446 - "GET /products HTTP/1.1" 200 OK
+INFO:     100.64.4.167:54452 - "GET /categories HTTP/1.1" 200 OK
+INFO:     100.64.4.167:54468 - "GET /categories HTTP/1.1" 200 OK
+INFO:     100.64.4.167:54460 - "GET /products HTTP/1.1" 200 OK
+INFO:     100.64.4.167:54472 - "GET /categories HTTP/1.1" 200 OK
+INFO:     100.64.4.167:54482 - "GET /products HTTP/1.1" 200 OK
+INFO:     100.64.4.167:54496 - "GET /products HTTP/1.1" 200 OK
+INFO:     100.64.4.167:48676 - "OPTIONS /products?category=7 HTTP/1.1" 200 OK
+INFO:     100.64.4.167:48690 - "GET /products?category=7 HTTP/1.1" 200 OK
+INFO:     100.64.4.167:48378 - "GET /products?category=1 HTTP/1.1" 200 OK
