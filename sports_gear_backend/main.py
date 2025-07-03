@@ -1,8 +1,18 @@
 """
 FastAPI/uvicorn entrypoint to enable correct src package import from backend root.
-Run with: uvicorn main:app --reload --host 0.0.0.0 --port 8000
 
-Ensures src is on sys.path so src.api.main:app can be imported cleanly.
+USAGE:
+- Run from within the sports_gear_backend directory:
+    uvicorn main:app --reload
+
+- Ensures the src/ package is always importable, even if you are not launching
+  uvicorn with the `PYTHONPATH` set or from project root.
+
+This file inserts the src/ absolute path (backend-local) at the front of sys.path
+so that 'from api.main import app' imports the FastAPI application correctly.
+
+If running from outside this folder, use the appropriate Python path (or
+simply cd into sports_gear_backend and use main:app).
 """
 
 import sys

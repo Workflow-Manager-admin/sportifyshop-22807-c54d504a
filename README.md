@@ -33,6 +33,36 @@ Uses SQLite DB (`sports_gear.db` by default, override with `SQLITE_DB_FILENAME` 
 
 ### Running and developing
 
+#### Recommended: Run backend from the sports_gear_backend folder
+
 1. Install dependencies (`pip install -r requirements.txt`)
-2. Run the server: `uvicorn src.api.main:app --reload`
+2. Run the server:
+   - From inside `sports_gear_backend` folder:  
+     ```
+     uvicorn src.api.main:app --reload
+     ```
+     OR (if you want to ensure `src` always imports cleanly regardless of CWD):
+     ```
+     uvicorn main:app --reload
+     ```
+     This uses `main.py` which sets up Python path for `src` imports.
+
+   - **From project root**  
+     If running from project root (`sportifyshop-22807-c54d504a/`), you can:
+     ```
+     cd sports_gear_backend
+     uvicorn main:app --reload
+     ```
+     Trying to run directly from project root with a command like
+     ```
+     uvicorn sports_gear_backend.src.api.main:app --reload
+     ```
+     is **not supported** unless the Python path is configured explicitly.
+
 3. API Docs: [http://localhost:8000/docs](http://localhost:8000/docs)
+
+#### Common error: "No module named 'src'"
+- This occurs if you run `uvicorn` from a directory where the `src` module is not on `PYTHONPATH`.
+- Always run uvicorn from within `sports_gear_backend` using `main:app`, or set your PYTHONPATH accordingly.
+- If you see this error, double-check your working directory and use the above instructions.
+
