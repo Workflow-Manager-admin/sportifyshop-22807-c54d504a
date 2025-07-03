@@ -2,6 +2,41 @@ import os
 import subprocess
 import socket
 
+import requests
+
+def check_products_images(api_url="http://127.0.0.1:8000/products"):
+    """Fetch products, print breakdown of image_url validity."""
+    try:
+        resp = requests.get(api_url, timeout=10)
+        if resp.status_code != 200:
+            print(f"Failed to get products: status {resp.status_code}")
+            return
+        data = resp.json()
+        for prod in data:
+            url = prod.get("image_url")
+            pid = prod.get("id")
+            name = prod.get("name")
+            if not url:
+                print(f"[MISSING] Product {pid} ('{name}') has no image_url")
+            elif not (url.startswith("http://") or url.startswith("https://")):
+                print(f"[INVALID] Product {pid} ('{name}') image_url is not public: {url}")
+            else:
+                # Check if URL is reachable (HEAD request)
+                try:
+                    test = requests.head(url, timeout=5)
+                    if test.status_code >= 400:
+                        print(f"[BROKEN-LINK] Product {pid}: {url} status={test.status_code}")
+                    else:
+                        print(f"[OK] Product {pid}: '{name}' -> {url}")
+                except Exception as e:
+                    print(f"[UNREACHABLE] Product {pid}: {url} error={e}")
+    except Exception as e:
+        print(f"Error in products image_url check: {e}")
+
+if __name__ == '__main__':
+    print("\n==== Product Image URL Data/Access Check ====")
+    check_products_images("http://127.0.0.1:8000/products")
+
 def is_port_open(port, host='127.0.0.1'):
     """Check if the backend port is open and listening."""
     try:
