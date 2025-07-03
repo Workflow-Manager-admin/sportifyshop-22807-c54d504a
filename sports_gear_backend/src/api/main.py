@@ -1,8 +1,20 @@
 import os
 from typing import List, Optional
-from fastapi import FastAPI, Depends, HTTPException, status, Body, Path, Query, Request
+from fastapi import (
+    FastAPI,
+    Depends,
+    HTTPException,
+    status,
+    Body,
+    Path,
+    Query,
+    Request,
+    UploadFile,
+    File,
+)
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field, EmailStr
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError
@@ -11,6 +23,7 @@ import jwt
 from datetime import datetime, timedelta
 import stripe
 from sqlalchemy import text
+from uuid import uuid4
 
 from . import models
 
@@ -40,8 +53,16 @@ app = FastAPI(
         {"name": "orders", "description": "Order management"},
         {"name": "profile", "description": "User profile"},
         {"name": "checkout", "description": "Order checkout and payment"},
+        {"name": "images", "description": "Image upload and static serving"},
     ],
 )
+
+# Create directory to store images if it doesn't exist yet.
+UPLOAD_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../../uploaded_images"))
+os.makedirs(UPLOAD_DIR, exist_ok=True)
+
+# Mount static directory at /static/images
+app.mount("/static/images", StaticFiles(directory=UPLOAD_DIR), name="static-images")
 
 app.add_middleware(
     CORSMiddleware,
@@ -153,7 +174,7 @@ class ProductOut(BaseModel):
     id: int
     name: str
     description: Optional[str]
-    image_url: Optional[str]
+    image_url: Optional[str]  # May be an absolute URL (external) or backend-served static path ("/static/images/...").
     price: float
     available_sizes: Optional[str]
     category: Optional[ProductCategoryOut]
@@ -207,6 +228,10 @@ class OrderOut(BaseModel):
 class StripeSessionResponse(BaseModel):
     checkout_url: str
 
+class ProductImageUploadResponse(BaseModel):
+    """Response returned after a successful image upload."""
+    image_url: str = Field(..., description="URL to access the uploaded image file")
+
 # ---------- Health/Root ---------- #
 @app.get("/", tags=["health"])
 def health_check():
@@ -257,6 +282,60 @@ def db_health_check(db: Session = Depends(get_db)):
             detail={"db_health": "unavailable", "detail": str(exc)},
         )
 
+# PUBLIC_INTERFACE
+@app.post(
+    "/products/upload-image",
+    response_model=ProductImageUploadResponse,
+    tags=["images", "catalog"],
+    summary="Upload product image and receive a URL",
+    responses={
+        200: {
+            "description": "Image file successfully uploaded and accessible.",
+            "content": {
+                "application/json": {
+                    "example": {
+                        "image_url": "/static/images/your_uploaded_file.png"
+                    }
+                }
+            },
+        },
+        400: {"description": "No file uploaded or bad file."},
+    },
+)
+async def upload_product_image(
+    file: UploadFile = File(..., description="Image file to upload (.png, .jpg, .jpeg, .gif)")
+):
+    """
+    PUBLIC_INTERFACE: Upload a product image to the backend and receive a static URL.
+
+    - Accepts a multipart/form-data POST with a file (png, jpg, jpeg, gif).
+    - Stores the image in the backend's static directory.
+    - Returns an accessible image URL to use as product.image_url.
+    - External image links may also be used for products (not uploaded).
+
+    Returns:
+        200: { "image_url": "/static/images/fname.png" }
+    """
+
+    allowed_exts = {".jpg", ".jpeg", ".png", ".gif"}
+    filename = file.filename
+    ext = os.path.splitext(filename)[-1].lower()
+    if ext not in allowed_exts:
+        raise HTTPException(
+            status_code=400, detail=f"Only {', '.join(allowed_exts)} files are allowed"
+        )
+    # Generate a unique filename to avoid collisions
+    saved_filename = f"{uuid4().hex}{ext}"
+    file_path = os.path.join(UPLOAD_DIR, saved_filename)
+    # Write file to disk in chunks for safety
+    with open(file_path, "wb") as image_out:
+        while True:
+            chunk = await file.read(1024 * 1024)
+            if not chunk:
+                break
+            image_out.write(chunk)
+    image_url = f"/static/images/{saved_filename}"
+    return ProductImageUploadResponse(image_url=image_url)
 # ------------------ AUTH & USER MANAGEMENT -------------------
 
 # PUBLIC_INTERFACE
@@ -594,6 +673,11 @@ def get_order(order_id: int = Path(..., gt=0), current_user: models.User = Depen
 
 # ------- ADMIN and DEMO (OPTIONAL: For quick population/init) ---------
 class ProductCreate(BaseModel):
+    """
+    For image_url:
+      - Provide either a static-path (from /products/upload-image) as returned by backend
+      - OR an externally hosted image URL (public HTTP URL)
+    """
     name: str
     description: Optional[str] = ""
     image_url: Optional[str] = None
@@ -620,7 +704,6 @@ def admin_add_product(product: ProductCreate, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(prod)
     return prod
-
 # ---- Improved Error handling middleware
 @app.exception_handler(Exception)
 async def generic_exception_handler(request: Request, exc: Exception):
@@ -636,3 +719,13 @@ async def generic_exception_handler(request: Request, exc: Exception):
         status_code=status_code,
         content={"detail": detail, "trace": trace},
     )
+
+# ---------------------------
+# NOTES TO DEVELOPERS:
+# For product image_url:
+#   - Either use a public external URL
+#   - Or upload via /products/upload-image (backend will host at /static/images/{filename})
+#     and store image_url as /static/images/{filename}
+#   - The backend will serve static files at /static/images/
+#   - Both modes are supported for all products
+# ---------------------------
